@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  /* Sun Artisans palette — temple brass on peacock, sandalwood paper */
+  --color-peacock: #0E4544;      /* primary dark: hero, mandir section, footer */
+  --color-peacock-deep: #09302F;
+  --color-chandan: #EBDDC6;      /* sandalwood page background */
+  --color-chandan-soft: #F4EBDD; /* raised surfaces */
+  --color-brass: #B0832F;        /* ornament, rules, arches */
+  --color-brass-light: #D9B56A;  /* brass on dark */
+  --color-kumkum: #8C2A1C;       /* the single action colour: WhatsApp / primary CTAs */
+  --color-ink: #2A1F14;          /* body text */
+  --color-ink-soft: #5C4A36;
+
+  --font-display: "Marcellus", Georgia, serif;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+  body {
+    @apply bg-chandan text-ink font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+  h1, h2, h3 { @apply font-display; font-weight: 400; letter-spacing: 0.005em; }
+  :focus-visible { outline: 2px solid var(--color-brass); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+}
+
+/* The mandir arch — the one recurring signature shape on the site */
+@utility arch { border-radius: 999px 999px 0.375rem 0.375rem; overflow: hidden; }
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-colors;
+}
+@utility btn-primary { @apply btn bg-kumkum text-chandan-soft hover:bg-[#6f2016]; }
+@utility btn-ghost-dark { @apply btn border border-brass-light/60 text-chandan hover:bg-white/10; }
+@utility btn-ghost { @apply btn border border-ink/25 text-ink hover:bg-ink/5; }
+@utility field {
+  @apply w-full rounded-md border border-ink/20 bg-chandan-soft px-3 py-1.5 text-sm text-ink placeholder:text-ink-soft/60 focus:border-brass focus:outline-none;
+}
+
+/* Hero load: the arch draws its brass outline once, nothing else animates */
+@keyframes arch-draw { from { stroke-dashoffset: 1600; } to { stroke-dashoffset: 0; } }
+.arch-line { stroke-dasharray: 1600; animation: arch-draw 2.2s cubic-bezier(.6,.1,.2,1) .2s both; }
