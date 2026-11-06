@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { store, waLink, telLink } from '../data/content'
 import { WhatsAppIcon } from './Icons'
 
@@ -12,30 +12,61 @@ const nav = [
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const [progress, setProgress] = useState(0) // 0 = top of page, 1 = scrolled past FADE_PX
+
+  // White background fades in gradually over the first FADE_PX of scrolling
+  useEffect(() => {
+    const FADE_PX = 220
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => setProgress(Math.min(1, Math.max(0, window.scrollY / FADE_PX))))
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
+  }, [])
+
+  const p = open ? 1 : progress
+  const solid = p > 0.55 // switch text/logo to dark once the background is mostly white
+
   return (
-    <header className="sticky top-0 z-40 border-b border-brass-light/15 bg-white/95 text-ink backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
+    <header
+      className={`fixed inset-x-0 top-0 z-40 ${solid ? 'text-ink' : 'text-white'}`}
+      style={{
+        backgroundColor: `rgb(255 255 255 / ${0.96 * p})`,
+        boxShadow: `0 1px 12px rgb(0 0 0 / ${0.08 * p})`,
+        backdropFilter: p > 0.05 ? `blur(${8 * p}px)` : undefined,
+      }}
+    >
+      {/* Dark fade for legibility over the video — disappears as the white comes in */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/45 to-transparent"
+        style={{ opacity: 1 - p }}
+      />
+      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
         <a href="#top" className="flex items-center" aria-label={`${store.legalName} home`}>
           <img
             src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png"
             alt={store.legalName}
-            className="h-12 w-auto object-contain"
+            className={`h-12 w-auto object-contain transition-[filter] duration-500 ${solid ? '' : 'brightness-0 invert'}`}
           />
         </a>
 
         <nav className="hidden items-center gap-7 text-[0.95rem] lg:flex" aria-label="Main">
           {nav.map((n) => (
-            <a key={n.href} href={n.href} className="text-ink/70 hover:text-brass">
+            <a key={n.href} href={n.href} className={`transition-colors duration-300 ${solid ? 'text-black hover:text-brass' : 'text-white/90 hover:text-brass-light'}`}>
               {n.label}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
-          <a href={telLink} className="hidden text-sm text-ink/70 hover:text-brass md:block">
+          <a href={telLink} className={`hidden text-sm transition-colors duration-300 md:block ${solid ? 'text-black hover:text-brass' : 'text-white/90 hover:text-brass-light'}`}>
             {store.phoneDisplay}
           </a>
-          <a href={waLink()} target="_blank" rel="noopener" className="btn-primary hidden !py-2 sm:inline-flex">
+          <a href={waLink()} target="_blank" rel="noopener" className="btn hidden bg-[#25D366] !py-2 text-[#0B2A17] hover:bg-[#1EBE5D] sm:inline-flex">
             <WhatsAppIcon className="h-4 w-4" /> WhatsApp us
           </a>
           <button

@@ -1,165 +1,215 @@
+import { useEffect, useState } from 'react'
+import { Ornament, WhatsAppIcon } from './Icons'
+import { waLink, store, categories } from '../data/content'
 
-const images = [
-  { src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80', alt: 'Home decor artifacts' },
-  { src: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=400&q=80', alt: 'Elegant home interior' },
-  { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80', alt: 'Brass decor pieces' },
-  { src: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80', alt: 'Living room decor' },
-  { src: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=400&q=80', alt: 'Mandir and pooja items' },
-  { src: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400&q=80', alt: 'Gifting collection' },
-]
-
-const row = [...images, ...images, ...images]
-const IMG = 220
-const GAP = 6
-
-function VerticalCarousel({ direction = 'up', size = IMG }) {
+// Brass strip of all category names scrolling left → right
+function CategoryMarquee() {
+  const Row = ({ hidden }) => (
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center">
+      {categories.map((c) => (
+        <li key={c.id} className="flex items-center whitespace-nowrap">
+          <span className="px-6 font-display text-lg tracking-wide text-peacock-deep sm:text-xl">{c.name}</span>
+          <svg viewBox="0 0 12 12" className="h-3 w-3 text-kumkum" fill="currentColor" aria-hidden="true">
+            <path d="M6 0 7.4 4.6 12 6 7.4 7.4 6 12 4.6 7.4 0 6 4.6 4.6Z" />
+          </svg>
+        </li>
+      ))}
+    </ul>
+  )
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: GAP, animation: `about-scroll-${direction} 22s linear infinite` }}>
-        {row.map((img, i) => (
-          <div key={i} className="flex-shrink-0 overflow-hidden rounded-xl shadow-lg" style={{ width: size, height: size }}>
-            <img src={img.src} alt={img.alt} className="h-full w-full object-cover" loading="lazy" />
-          </div>
-        ))}
+    <div className="marquee relative overflow-hidden border-y border-brass bg-brass-light py-3">
+      <p className="sr-only">Our categories: {categories.map((c) => c.name).join(', ')}</p>
+      <div className="marquee-track flex w-max" aria-hidden="true">
+        <Row /><Row hidden /><Row hidden /><Row hidden />
       </div>
     </div>
   )
 }
 
-export default function About() {
-  const sectionH = IMG * 2.5 + GAP * 4
+// Carousel photos — the store's own product cut-outs (square 900 × 900, transparent background) in public/photo
+const slides = [
+  { src: '/photo/IMG_3729_900x900_full.png', alt: 'Hand-painted Ganesha wall art with carved floral frame' },
+  { src: '/photo/IMG_3953_900x900_full.png', alt: 'Pale blue ceramic vase with raised purple flowers' },
+  { src: '/photo/IMG_3975_900x900_full.png', alt: 'Lord Krishna bust playing the flute, with peacock-feather crown' },
+  { src: '/photo/IMG_3954_900x900_full.png', alt: 'Cream ceramic vase with a sculpted maroon flower' },
+  { src: '/photo/sculpture_cutout_900x900.png', alt: 'Smiling baby monk sculpture resting on its hands' },
+]
 
-  const textBlock = (
-    <div className="relative z-10 flex flex-col items-center text-center px-6 py-10 md:py-0 md:h-full md:justify-center">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="h-px w-8 bg-[#C9973A]" />
-        <span className="text-xs font-bold uppercase tracking-[0.3em]" style={{ color: '#C9973A' }}>About Us</span>
-        <span className="h-px w-8 bg-[#C9973A]" />
-      </div>
+const AUTOPLAY_MS = 4000
 
-      <h2 className="text-2xl leading-tight sm:text-4xl lg:text-5xl font-display" style={{ color: '#f5ede0' }}>
-        <span className="whitespace-nowrap">Pimpri-Chinchwad's trusted</span><br />
-        <span style={{ color: '#C9973A' }}>art &amp; craft gallery</span>
-      </h2>
+// Where each slide sits relative to the active one: main in front, one peeking behind on each side
+const POSITIONS = {
+  main: 'z-30 translate-x-0 scale-[1.15] opacity-100',
+  right: 'z-20 translate-x-[44%] scale-[0.58] opacity-45',
+  left: 'z-20 -translate-x-[44%] scale-[0.58] opacity-45',
+  hidden: 'z-10 translate-x-0 scale-[0.6] opacity-0',
+}
 
-      <div className="my-4 flex items-center gap-2 opacity-60">
-        <span className="h-px w-10 bg-[#C9973A]" />
-        <span style={{ color: '#C9973A', fontSize: 18 }}>✦</span>
-        <span className="h-px w-10 bg-[#C9973A]" />
-      </div>
+function ArchCarousel() {
+  const n = slides.length
+  const [active, setActive] = useState(0)
+  const [hovering, setHovering] = useState(false)
 
-      <p className="text-base md:text-[1.02rem] leading-relaxed max-w-[36ch] md:max-w-[48ch]" style={{ color: '#ffffff' }}>
-        Sun Artisans LLP is a trusted home decor and art gallery in Udhyamnagar, Pimpri — your one-stop destination
-        for artifacts, photo frames, artificial plants, home mandirs, brass décor and more.
-        Every piece we curate reflects our promise: trustworthy, luxury, and modern.
-      </p>
+  // Respect reduced-motion: never autoplay
+  const [reduced, setReduced] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduced(mq.matches)
+    const on = (e) => setReduced(e.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
 
-      <div className="mt-6 flex gap-3 flex-wrap justify-center">
-        {['Trustworthy', 'Luxury', 'Modern'].map((w) => (
-          <span key={w} className="rounded-full border px-4 py-1.5 text-sm md:text-sm font-display tracking-wide"
-            style={{ borderColor: '#C9973A55', color: '#C9973A' }}>
-            {w}
-          </span>
-        ))}
+  const running = !hovering && !reduced
+  useEffect(() => {
+    if (!running) return
+    const t = setInterval(() => setActive((a) => (a + 1) % n), AUTOPLAY_MS)
+    return () => clearInterval(t)
+  }, [running, n])
+
+  const placeOf = (i) => {
+    const d = (i - active + n) % n
+    if (d === 0) return 'main'
+    if (d === 1) return 'right'
+    if (d === n - 1) return 'left'
+    return 'hidden'
+  }
+
+  return (
+    <div
+      className="absolute inset-0"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Sun Artisans gallery"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      {/* Stage */}
+      <div className="absolute inset-x-[6%] inset-y-0">
+        {slides.map((s, i) => {
+          const place = placeOf(i)
+          return (
+            <div
+              key={s.src}
+              aria-hidden={place !== 'main'}
+              aria-roledescription="slide"
+              aria-label={`${i + 1} of ${n}`}
+              className={`absolute top-[56%] left-[14%] aspect-square w-[72%] -translate-y-1/2 origin-center transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${POSITIONS[place]}`}
+            >
+              {/* Inner layer swings when this slide becomes main */}
+              {/* No backdrop — the transparent product cut-out floats directly on the sunburst */}
+              <div className={`relative h-full w-full ${place === 'main' ? 'swing-in' : ''}`}>
+                <img
+                  src={s.src}
+                  alt={s.alt}
+                  loading={i < 3 || i === n - 1 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_18px_18px_rgb(42_31_20/0.45)]"
+                />
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
+}
 
+const pillars = [
+  {
+    title: 'Trustworthy',
+    icon: (
+      <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6L12 3Zm-3.2 9.2 2.2 2.2 4.4-4.6" />
+    ),
+  },
+  {
+    title: 'Luxury',
+    icon: <path d="M6 4h12l3 5-9 11L3 9l3-5Zm-3 5h18M9.5 4 12 20M14.5 4 12 20" />,
+  },
+  {
+    title: 'Modern',
+    icon: <path d="M4 20V10l8-6 8 6v10M9 20v-6h6v6M4 20h16" />,
+  },
+]
+
+export default function About() {
   return (
-    <>
-      <style>{`
-        @keyframes about-scroll-up {
-          0%   { transform: translateY(0); }
-          100% { transform: translateY(calc(-100% / 3)); }
-        }
-        @keyframes about-scroll-down {
-          0%   { transform: translateY(calc(-100% / 3)); }
-          100% { transform: translateY(0); }
-        }
-      `}</style>
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className="relative overflow-hidden bg-peacock text-chandan"
+    >
+      <CategoryMarquee />
 
-      {/* ── MOBILE: images behind, text in front ── */}
-      <section id="about" className="relative overflow-hidden md:hidden"
-        style={{ background: 'linear-gradient(135deg, #0b3330 0%, #0f4a44 50%, #0b3330 100%)' }}>
+      {/* Brass hairline framing the section bottom */}
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-brass-light/70 to-transparent" />
 
-        {/* Both carousels full-height behind everything */}
-        <div className="absolute inset-0 flex gap-1" style={{ zIndex: 0 }}>
-          <div className="relative flex-1 overflow-hidden">
-            <VerticalCarousel direction="up" size={200} />
-          </div>
-          <div className="relative flex-1 overflow-hidden">
-            <VerticalCarousel direction="down" size={200} />
-          </div>
+      {/* Faint mandala behind the photo cluster */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-40 top-1/2 h-170 w-170 -translate-y-1/2 text-brass-light opacity-[0.07]"
+        viewBox="0 0 200 200" fill="none" stroke="currentColor"
+      >
+        {[95, 78, 60, 42, 24].map((r) => <circle key={r} cx="100" cy="100" r={r} strokeWidth="0.6" />)}
+        {Array.from({ length: 12 }, (_, i) => (
+          <line key={i} x1="100" y1="5" x2="100" y2="195" strokeWidth="0.4" transform={`rotate(${i * 15} 100 100)`} />
+        ))}
+      </svg>
+
+      <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-8 sm:px-8 md:py-10 lg:grid-cols-[1fr_1.1fr] lg:items-stretch lg:gap-20 lg:py-10">
+        {/* ── Arch carousel on a brass sunburst panel; on desktop it stretches to the text column's height ── */}
+        <div className="sunburst arch relative mx-auto aspect-4/5 w-full max-w-sm overflow-hidden shadow-2xl shadow-black/30 ring-1 ring-brass-light/40 lg:aspect-auto lg:h-full lg:min-h-130 lg:max-w-none">
+          <ArchCarousel />
         </div>
 
-        {/* Dark overlay so text is readable */}
-        <div className="absolute inset-0" style={{ background: 'rgba(11,51,48,0.88)', zIndex: 1 }} />
+        {/* ── Story ── */}
+        <div className="text-center lg:text-left">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brass-light">About Sun Artisans</p>
 
-        {/* Gold borders */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C9973A] to-transparent opacity-60" style={{ zIndex: 2 }} />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C9973A] to-transparent opacity-60" style={{ zIndex: 2 }} />
-
-        {textBlock}
-      </section>
-
-      {/* ── DESKTOP: vertical side carousels ── */}
-      <section id="about-desktop" className="relative overflow-hidden hidden md:block"
-        style={{ height: sectionH, background: 'linear-gradient(135deg, #0b3330 0%, #0f4a44 50%, #0b3330 100%)' }}>
-
-        {/* Mandala */}
-        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-10" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-          <circle cx="50%" cy="50%" r="280" fill="none" stroke="#C9973A" strokeWidth="1" />
-          <circle cx="50%" cy="50%" r="220" fill="none" stroke="#C9973A" strokeWidth="0.6" />
-          <circle cx="50%" cy="50%" r="160" fill="none" stroke="#C9973A" strokeWidth="1" />
-          <circle cx="50%" cy="50%" r="100" fill="none" stroke="#C9973A" strokeWidth="0.6" />
-          <line x1="0" y1="0" x2="100%" y2="100%" stroke="#C9973A" strokeWidth="0.5" />
-          <line x1="100%" y1="0" x2="0" y2="100%" stroke="#C9973A" strokeWidth="0.5" />
-          <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#C9973A" strokeWidth="0.5" />
-          <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#C9973A" strokeWidth="0.5" />
-        </svg>
-
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C9973A] to-transparent opacity-60" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C9973A] to-transparent opacity-60" />
-
-        <div className="absolute left-0 top-0 overflow-hidden" style={{ width: IMG, height: sectionH, zIndex: 1 }}>
-          <VerticalCarousel direction="up" />
-        </div>
-        <div className="absolute right-0 top-0 overflow-hidden" style={{ width: IMG, height: sectionH, zIndex: 1 }}>
-          <VerticalCarousel direction="down" />
-        </div>
-
-        <div className="relative flex h-full flex-col items-center justify-center text-center z-20"
-          style={{ paddingLeft: IMG + 32, paddingRight: IMG + 32 }}>
-          <div className="flex items-center gap-3 mb-5">
-            <span className="h-px w-10 bg-[#C9973A]" />
-            <span className="text-xs font-bold uppercase tracking-[0.3em]" style={{ color: '#C9973A' }}>About Us</span>
-            <span className="h-px w-10 bg-[#C9973A]" />
-          </div>
-          <h2 className="text-3xl leading-tight sm:text-4xl lg:text-5xl font-display" style={{ color: '#f5ede0' }}>
-            Pimpri-Chinchwad's trusted<br />
-            <span style={{ color: '#C9973A' }}>art &amp; craft gallery</span>
+          {/* Two fixed lines; size scales with viewport so line 1 always fits its column */}
+          <h2 id="about-heading" className="mt-4 text-[clamp(1.45rem,6.4vw,2.6rem)] leading-[1.2] lg:text-[2.1rem] xl:text-[2.4rem]">
+            <span className="block whitespace-nowrap">Pimpri-Chinchwad’s trusted</span>
+            <span className="block whitespace-nowrap text-brass-light">art &amp; craft gallery</span>
           </h2>
-          <div className="my-5 flex items-center gap-2 opacity-60">
-            <span className="h-px w-12 bg-[#C9973A]" />
-            <span style={{ color: '#C9973A', fontSize: 18 }}>✦</span>
-            <span className="h-px w-12 bg-[#C9973A]" />
+
+          <Ornament className="mx-auto mt-6 h-5 w-auto text-brass-light/70 lg:mx-0" />
+
+          <div className="mx-auto mt-6 max-w-[60ch] space-y-4 text-[1.05rem] leading-relaxed text-white lg:mx-0">
+            <p>
+              {store.legalName} is a home decor and art gallery in Udhyamnagar, Pimpri — the place families across
+              PCMC and Pune turn to for artifacts, photo frames, artificial plants, home mandirs, god murtis and brass décor.
+            </p>
+            <p>
+              Furnishing a new home, choosing a gift, or sourcing for a client project? Everything is curated under one roof.
+            </p>
           </div>
-          <p className="text-[1.02rem] leading-relaxed max-w-[72ch]" style={{ color: '#ffffff' }}>
-            Sun Artisans LLP is a trusted home decor and art and craft gallery located in Udhyamnagar, Pimpri.
-            We're the destination families across PCMC and Pune turn to for artifacts, photo frames, artificial plants,
-            home mandirs, god murtis, brass décor and more — all curated under one roof. Trustworthy, luxury and modern
-            are the three words that guide everything we stock, and every piece in our gallery reflects that promise.
-            Whether you're furnishing a new home, choosing a gift, or sourcing decor for a client project,
-            Sun Artisans is your one-stop shop for home decor needs.
-          </p>
-          <div className="mt-8 flex gap-6">
-            {['Trustworthy', 'Luxury', 'Modern'].map((w) => (
-              <span key={w} className="rounded-full border px-5 py-1.5 text-sm font-display tracking-wide"
-                style={{ borderColor: '#C9973A55', color: '#C9973A' }}>{w}</span>
+
+          {/* Pillars */}
+          <ul className="mt-10 grid gap-4 text-left sm:grid-cols-3">
+            {pillars.map((p) => (
+              <li key={p.title} className="flex items-center justify-center gap-2.5 rounded-xl border border-brass-light/20 bg-peacock-deep/50 px-4 py-4">
+                <svg
+                  aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                  className="h-6 w-6 shrink-0 text-brass-light"
+                >
+                  {p.icon}
+                </svg>
+                <h3 className="text-lg text-chandan">{p.title}</h3>
+              </li>
             ))}
+          </ul>
+
+          {/* Actions */}
+          <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <a href={waLink()} target="_blank" rel="noopener" className="btn bg-[#25D366] text-[#0B2A17] hover:bg-[#1EBE5D]">
+              <WhatsAppIcon className="h-5 w-5" />
+              Chat with us
+            </a>
+            <a href="#visit" className="btn-ghost-dark">Visit the store</a>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }

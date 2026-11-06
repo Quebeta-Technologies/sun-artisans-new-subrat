@@ -1,266 +1,283 @@
 import { useEffect, useRef, useState } from 'react'
 import { waLink } from '../data/content'
-import { WhatsAppIcon } from './Icons'
+import { Ornament, WhatsAppIcon } from './Icons'
+import Lightbox, { SmartImg } from './Lightbox'
+
+/*
+ * Photos: put 6 images per item in public/photo/mandir/<id>/1.webp … 6.webp
+ * e.g. public/photo/mandir/home-mandirs/1.webp
+ * Ids: home-mandirs, god-murtis, brass-items
+ * Size: 800 × 800 px (square). Until a file exists, the DEMO image below is shown instead.
+ */
+const PHOTOS = 6
+const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.webp`
+
+// Demo images (Unsplash) — shown only while the real photo file is missing. Delete once real photos are in.
+const u = (id) => `https://images.unsplash.com/photo-${id}?w=700&h=700&fit=crop&q=75`
+const DEMO = {
+  'home-mandirs': ['1582510003544-4d00b7f74220', '1567767292278-a4f21aa2d36e', '1616046229478-9901c5536a45', '1600093463592-8e36ae95ef56', '1586023492125-27b2c045efd7', '1555041469-a586c61ea9bc'].map(u),
+  'god-murtis': ['1600618528240-fb9fc964b853', '1600585154340-be6161a56a0c', '1540518614846-7eded433c457', '1513519245088-0e12902e5a38', '1558618666-fcd25c85cd64', '1604014237800-1c9102c219da'].map(u),
+  'brass-items': ['1606293926075-69a00dbfde81', '1416879595882-3373a0480b5b', '1586023492125-27b2c045efd7', '1567767292278-a4f21aa2d36e', '1616046229478-9901c5536a45', '1540518614846-7eded433c457'].map(u),
+}
+const demoSrc = (id, n) => DEMO[id]?.[n - 1]
 
 const items = [
   {
     id: 'home-mandirs',
     name: 'Home Mandirs',
     tag: 'Sacred Spaces',
+    chips: ['Wall-mount', 'Floor-standing', 'Range of sizes & finishes'],
     text: 'Choose from a range of sizes and finishes — from compact wall-mount to grand floor mandirs. Each piece brings peace and devotion into your home.',
-    cta: 'Enquire about Mandirs',
-    img: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=900&q=85',
+    icon: <path d="M12 2.5 8 6.5h8l-4-4ZM6 6.5h12v3H6zM7 9.5v11M17 9.5v11M4.5 20.5h15M10 20.5v-5a2 2 0 0 1 4 0v5" />,
   },
   {
     id: 'god-murtis',
     name: 'God Murtis',
     tag: 'Timeless Faith',
-    text: 'Traditional and modern styles across marble, brass, and resin. From small pooja shelf murtis to statement pieces crafted with care and devotion.',
-    cta: 'Enquire about Murtis',
-    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85',
+    chips: ['Marble', 'Brass', 'Resin', 'Traditional & modern'],
+    text: 'Traditional and modern styles across marble, brass and resin. From small pooja-shelf murtis to statement pieces crafted with care and devotion.',
+    icon: <path d="M12 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM8 21c0-3 .5-6 1.5-8.5L12 10l2.5 2.5C15.5 15 16 18 16 21M5 21h14M7.5 12 5 10m11.5 2L19 10" />,
   },
   {
     id: 'brass-items',
     name: 'Brass Items',
     tag: 'Heritage Craft',
+    chips: ['Diyas', 'Kalash', 'Incense holders', 'Bells'],
     text: 'Diyas, kalash, incense holders, bells and more — each handcrafted piece adds warmth, tradition and character to any pooja space or living room.',
-    cta: 'Enquire about Brass',
-    img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&q=85',
+    icon: <path d="M12 3c1.6 2 2.4 3.4 2.4 4.6A2.4 2.4 0 0 1 12 10a2.4 2.4 0 0 1-2.4-2.4C9.6 6.4 10.4 5 12 3ZM4 13h16c-.6 3.6-3.8 6-8 6s-7.4-2.4-8-6ZM9 19l-1 2h8l-1-2" />,
   },
 ]
 
-export default function MandirCollection() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [visible, setVisible] = useState(true)
-  const prevIndex = useRef(0)
-  const panelRefs = useRef([])
+const enquire = (item) => ({
+  href: waLink(`Hi Sun Artisans, I'd like to enquire about ${item.name}.`),
+  external: true,
+})
 
+/*
+ * Infinite photo carousel: shows 2 / 3 / 5 photos (mobile / tablet / desktop)
+ * and moves one photo at a time. The first few photos are cloned at the end so
+ * the loop wraps around without a visible jump. Pauses on hover; no autoplay with reduced motion.
+ */
+const STEP_MS = 2500
+const MAX_VISIBLE = 5
+
+function PhotoCarousel({ item, dir, onOpen }) {
+  const slides = [...Array(PHOTOS).keys(), ...Array(MAX_VISIBLE).keys()] // 0..5 + clones 0..4
+  const [k, setK] = useState(0) // how many photos the track has moved
+  const [instant, setInstant] = useState(false) // true while snapping back from clones to the start
+  const [hover, setHover] = useState(false)
+  const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+
+  // Auto-advance one photo at a time
   useEffect(() => {
-    const handleScroll = () => {
-      const mid = window.innerHeight / 2
-      let best = 0
-      let bestDist = Infinity
-      panelRefs.current.forEach((el, i) => {
-        if (!el) return
-        const rect = el.getBoundingClientRect()
-        const elMid = rect.top + rect.height / 2
-        const dist = Math.abs(elMid - mid)
-        if (dist < bestDist) { bestDist = dist; best = i }
-      })
-      prevIndex.current = activeIndex
-      setActiveIndex(best)
+    if (hover || reduced) return
+    const t = setInterval(() => setK((v) => v + 1), STEP_MS)
+    return () => clearInterval(t)
+  }, [hover, reduced])
+
+  // After the slide onto the first clone finishes, jump (without animation) back to the real first photo
+  const onTransitionEnd = (e) => {
+    if (e.target !== e.currentTarget) return
+    if (k >= PHOTOS) {
+      setInstant(true)
+      setK((v) => v - PHOTOS)
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }
+  // Safety net if transitionend didn't fire (e.g. background tab)
+  useEffect(() => {
+    if (k > PHOTOS) { setInstant(true); setK((v) => v % PHOTOS) }
+  }, [k])
+  // Re-enable the animation on the next frame after an instant snap
+  useEffect(() => {
+    if (!instant) return
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setInstant(false)))
+    return () => cancelAnimationFrame(id)
+  }, [instant])
 
   return (
-    <>
-      {/* ── DESKTOP sticky scroll ── */}
-      <div id="mandir" className="hidden lg:block relative"
-        style={{ background: '#0a2e2b' }}>
-
-        <style>{`
-        .mandir-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 1.5rem; opacity: 0; transition: opacity 0.6s ease; }
-        .mandir-img.active { opacity: 1; }
-        .mandir-cta-btn {
-          position: relative;
-          overflow: hidden;
-          z-index: 0;
-          transition: color 0.35s ease, border-color 0.35s ease;
-        }
-        .mandir-cta-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: #C9973A;
-          transform: translateX(-100%);
-          transition: transform 0.35s ease;
-          z-index: -1;
-          border-radius: inherit;
-        }
-        .mandir-cta-btn:hover::before { transform: translateX(0); }
-        .mandir-cta-btn:hover { color: #0a2e2b; border-color: #C9973A; }
-      `}</style>
-
-      {/* Subtle diagonal line pattern */}
-        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.035]" aria-hidden="true">
-          <defs>
-            <pattern id="mandir-diag" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="40" stroke="#C9973A" strokeWidth="1"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#mandir-diag)"/>
-        </svg>
-
-        {/* Section header — top center */}
-        <div className="relative flex flex-col items-center pt-10 pb-6 z-10 text-center px-8">
-          <div className="flex items-center gap-3 rounded-full px-5 py-2 mb-5"
-            style={{ border: '1px solid rgba(201,151,58,0.3)', background: 'rgba(201,151,58,0.07)' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C9973A]" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color: '#C9973A' }}>Mandir Collection</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C9973A]" />
-          </div>
-          <h2 className="font-display text-4xl lg:text-5xl leading-tight" style={{ color: '#f5ede0' }}>
-            Mandir, Murti &amp; Brass Collection<br />
-            <span style={{ color: '#C9973A' }}>Crafted for Everyday Worship</span>
-          </h2>
-        </div>
-
-        {/* Main sticky layout */}
-        <div className="relative flex mx-auto max-w-7xl px-8">
-
-          {/* Vertical progress bar — far left */}
-          <div className="flex flex-col items-center gap-0 mr-8 flex-shrink-0 pt-[calc(50vh-60px)]"
-            style={{ alignSelf: 'flex-start', position: 'sticky', top: '80px', height: 'calc(100vh - 80px)', justifyContent: 'center' }}>
-            {items.map((_, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="rounded-full transition-all duration-500 cursor-default"
-                  style={{
-                    width: i === activeIndex ? 10 : 6,
-                    height: i === activeIndex ? 10 : 6,
-                    background: i === activeIndex ? '#C9973A' : 'rgba(201,151,58,0.3)',
-                    boxShadow: i === activeIndex ? '0 0 8px #C9973A88' : 'none',
-                  }} />
-                {i < items.length - 1 && (
-                  <div style={{ width: 1, height: 48, background: 'rgba(201,151,58,0.2)' }} />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* LEFT — sticky image (60% width) */}
-          <div className="flex-shrink-0" style={{
-            width: '56%',
-            alignSelf: 'flex-start',
-            position: 'sticky',
-            top: '80px',
-            height: 'calc(100vh - 80px)',
-            display: 'flex',
-            alignItems: 'center',
-            paddingRight: '2rem',
-          }}>
-            <div className="relative w-full" style={{ height: '82vh' }}>
-              {/* Images stacked, slide between them */}
-              {items.map((item, i) => {
-                const isActive = i === activeIndex
-                const isAbove = i < activeIndex
-                return (
-                  <img
-                    key={item.id}
-                    src={item.img}
-                    alt={item.name}
-                    className={`mandir-img${isActive ? ' active' : ''}`}
-                    style={{ zIndex: isActive ? 1 : 0 }}
-                  />
-                )
-              })}
-
-              {/* Subtle dark gradient at bottom of image */}
-              <div className="absolute inset-x-0 bottom-0 h-32 rounded-b-3xl z-10"
-                style={{ background: 'linear-gradient(to top, rgba(10,46,43,0.7) 0%, transparent 100%)' }} />
-
-              {/* Gold corner accents */}
-              <div className="pointer-events-none absolute inset-0 z-20">
-                <svg viewBox="0 0 100 100" className="absolute top-4 left-4 h-10 w-10" fill="none" stroke="#C9973A" strokeWidth="2"><path d="M2 22 L2 2 L22 2"/></svg>
-                <svg viewBox="0 0 100 100" className="absolute top-4 right-4 h-10 w-10" fill="none" stroke="#C9973A" strokeWidth="2"><path d="M98 22 L98 2 L78 2"/></svg>
-                <svg viewBox="0 0 100 100" className="absolute bottom-4 left-4 h-10 w-10" fill="none" stroke="#C9973A" strokeWidth="2"><path d="M2 78 L2 98 L22 98"/></svg>
-                <svg viewBox="0 0 100 100" className="absolute bottom-4 right-4 h-10 w-10" fill="none" stroke="#C9973A" strokeWidth="2"><path d="M98 78 L98 98 L78 98"/></svg>
-              </div>
-
-            </div>
-          </div>
-
-          {/* RIGHT — scrollable panels (40% width) */}
-          <div style={{ width: '44%' }}>
-            {items.map((item, i) => (
-              <div
-                key={item.id}
-                ref={(el) => (panelRefs.current[i] = el)}
-                className="flex flex-col justify-center"
-                style={{ height: '100vh', paddingLeft: '1rem' }}
+    <div
+      className="overflow-hidden [--g:0.5rem] [--v:2] sm:[--g:0.75rem] sm:[--v:3] lg:[--v:5]"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <ul
+        onTransitionEnd={onTransitionEnd}
+        className={`flex gap-(--g) ${instant ? '' : 'transition-transform duration-700 ease-[cubic-bezier(.65,0,.35,1)]'}`}
+        style={{ transform: `translateX(calc(${-k} * (100% + var(--g)) / var(--v)))` }}
+      >
+        {slides.map((n, i) => {
+          const clone = i >= PHOTOS
+          return (
+            <li
+              key={i}
+              aria-hidden={clone || undefined}
+              className={`shrink-0 ${dir > 0 ? 'mandir-in-right' : 'mandir-in-left'}`}
+              style={{ flexBasis: 'calc((100% - (var(--v) - 1) * var(--g)) / var(--v))', animationDelay: `${Math.min(i, MAX_VISIBLE) * 70}ms` }}
+            >
+              <button
+                type="button"
+                tabIndex={clone ? -1 : undefined}
+                onClick={() => onOpen(n)}
+                aria-label={`View ${item.name} photo ${n + 1}`}
+                className="group relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-peacock ring-1 ring-brass-light/25"
               >
-                {/* Tag */}
-                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.35em] mb-4 px-3 py-1 rounded-full self-start"
-                  style={{ color: '#C9973A', border: '1px solid rgba(201,151,58,0.35)', background: 'rgba(201,151,58,0.07)' }}>
-                  {item.tag}
+                <SmartImg
+                  src={photoSrc(item.id, n + 1)}
+                  fallbackSrc={demoSrc(item.id, n + 1)}
+                  alt=""
+                  tone="dark"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+export default function MandirCollection() {
+  const [activeIdx, setActiveIdx] = useState(0)
+  const [viewing, setViewing] = useState(null)
+  const tabRefs = useRef([])
+  const active = items[activeIdx]
+
+  // Direction of the last tab change, so new photos slide in from that side
+  const [dir, setDir] = useState(1)
+
+  const select = (next) => {
+    if (next === activeIdx) return
+    setDir(next > activeIdx ? 1 : -1)
+    setActiveIdx(next)
+  }
+
+  const onKeyDown = (e) => {
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]
+    if (!d) return
+    e.preventDefault()
+    const next = (activeIdx + d + items.length) % items.length
+    select(next)
+    tabRefs.current[next]?.focus()
+  }
+
+  return (
+    <section id="mandir" aria-labelledby="mandir-heading" className="relative overflow-hidden bg-peacock-deep pt-8 pb-12 text-chandan lg:pt-10 lg:pb-16">
+      {/* Faint mandala, top right */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 -right-40 h-130 w-130 text-brass-light opacity-[0.06]"
+        viewBox="0 0 200 200" fill="none" stroke="currentColor"
+      >
+        {[95, 78, 60, 42, 24].map((r) => <circle key={r} cx="100" cy="100" r={r} strokeWidth="0.6" />)}
+        {Array.from({ length: 12 }, (_, i) => (
+          <line key={i} x1="100" y1="5" x2="100" y2="195" strokeWidth="0.4" transform={`rotate(${i * 15} 100 100)`} />
+        ))}
+      </svg>
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brass-light">Mandir Collection</p>
+          <h2 id="mandir-heading" className="mt-2 text-4xl sm:text-5xl">
+            Mandir, Murti &amp; Brass
+          </h2>
+          <p className="mt-2 font-display text-xl text-brass-light sm:text-2xl">Crafted for everyday worship</p>
+          <Ornament className="mx-auto mt-4 h-5 w-auto text-brass-light/70" />
+        </div>
+
+        {/* ── 3 tabs on top ── */}
+        <div
+          role="tablist"
+          aria-label="Mandir collection"
+          onKeyDown={onKeyDown}
+          className="mx-auto mt-6 grid max-w-4xl grid-cols-3 gap-2 sm:gap-4 lg:mt-8"
+        >
+          {items.map((it, i) => {
+            const selected = i === activeIdx
+            return (
+              <button
+                key={it.id}
+                ref={(el) => (tabRefs.current[i] = el)}
+                id={`mandir-tab-${it.id}`}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls="mandir-panel"
+                tabIndex={selected ? 0 : -1}
+                onClick={() => select(i)}
+                className={`group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-4 text-center transition-all duration-300 sm:flex-row sm:gap-3 sm:px-5 sm:text-left
+                  ${selected
+                    ? 'border-brass-light bg-brass-light text-peacock-deep shadow-lg shadow-black/30'
+                    : 'border-brass-light/25 bg-peacock/40 text-chandan hover:border-brass-light/60 hover:bg-peacock/70'}`}
+              >
+                <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors ${selected ? 'bg-peacock-deep text-brass-light' : 'bg-brass-light/10 text-brass-light'}`}>
+                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    {it.icon}
+                  </svg>
                 </span>
-
-                {/* Title */}
-                <h2 className="font-display leading-[1.1] mb-5"
-                  style={{ fontSize: 'clamp(2.2rem, 3.5vw, 3.5rem)', color: '#f5ede0' }}>
-                  {item.name}
-                </h2>
-
-                {/* Gold divider */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, #C9973A, transparent)' }} />
-                  <span style={{ color: '#C9973A', fontSize: 12 }}>✦</span>
-                </div>
-
-                {/* Body */}
-                <p className="text-[1.05rem] leading-relaxed mb-10" style={{ color: '#c8b89a', maxWidth: '38ch' }}>
-                  {item.text}
-                </p>
-
-                {/* CTA */}
-                <a
-                  href={waLink(`Hi Sun Artisans, I'd like to enquire about ${item.name}.`)}
-                  target="_blank" rel="noopener"
-                  className="group inline-flex items-center gap-3 self-start"
-                >
-                  <span className="mandir-cta-btn inline-block rounded-xl border px-6 py-3 text-sm font-semibold"
-                    style={{ color: '#f5ede0', borderColor: 'rgba(201,151,58,0.5)' }}>
-                    {item.cta}
+                <span className="min-w-0">
+                  <span className="block font-display text-base leading-tight sm:text-xl">{it.name}</span>
+                  <span className={`mt-0.5 hidden text-xs uppercase tracking-[0.2em] sm:block ${selected ? 'text-peacock-deep/70' : 'text-chandan/60'}`}>
+                    {it.tag}
                   </span>
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
-      {/* ── MOBILE: stacked cards ── */}
-      <div id="mandir-mobile" className="lg:hidden relative overflow-hidden py-12 px-5"
-        style={{ background: '#0a2e2b' }}>
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2 rounded-full px-4 py-1.5"
-            style={{ border: '1px solid rgba(201,151,58,0.3)', background: 'rgba(201,151,58,0.07)' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C9973A]" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: '#C9973A' }}>Mandir Collection</span>
-          </div>
-        </div>
-        <div className="space-y-6 max-w-xl mx-auto">
-          {items.map((item, i) => (
-            <a key={item.id}
-              href={waLink(`Hi Sun Artisans, I'd like to enquire about ${item.name}.`)}
-              target="_blank" rel="noopener"
-              className="group block rounded-2xl overflow-hidden"
-              style={{ border: '1px solid rgba(201,151,58,0.2)' }}>
-              <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
-                <img src={item.img} alt={item.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)' }} />
-              </div>
-              <div className="p-5" style={{ background: 'rgba(15,60,55,0.95)' }}>
-                <span className="text-[10px] font-bold uppercase tracking-widest mb-2 block" style={{ color: '#C9973A' }}>{item.tag}</span>
-                <h3 className="font-display text-2xl mb-3" style={{ color: '#f5ede0' }}>{item.name}</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: '#c8b89a' }}>{item.text}</p>
-                <span className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold"
-                  style={{ background: '#25D366', color: '#fff' }}>
-                  {item.cta}
                 </span>
-              </div>
-            </a>
-          ))}
+              </button>
+            )
+          })}
         </div>
-        <div className="absolute inset-x-0 bottom-0 leading-[0]">
-          <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="w-full" style={{ height: 40, display: 'block' }}>
-            <path d="M0,40 L0,20 Q60,40 120,20 Q180,0 240,20 Q300,40 360,20 Q420,0 480,20 Q540,40 600,20 Q660,0 720,20 Q780,40 840,20 Q900,0 960,20 Q1020,40 1080,20 Q1140,0 1200,20 Q1260,40 1320,20 Q1380,0 1440,20 L1440,40 Z" fill="#faf5ee" />
-          </svg>
+
+        {/* ── Panel: details + 6 photos ── */}
+        <div
+          id="mandir-panel"
+          role="tabpanel"
+          aria-labelledby={`mandir-tab-${active.id}`}
+          className="mt-8 lg:mt-10"
+        >
+          {/* Details — centred editorial, on top */}
+          <div key={active.id} className="cat-fade mx-auto max-w-3xl text-center">
+            <p className="mx-auto max-w-[56ch] text-lg leading-relaxed text-white">{active.text}</p>
+            <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2" aria-label={`${active.name} highlights`}>
+              {active.chips.map((c) => (
+                <li key={c} className="flex items-center gap-2 text-brass-light">
+                  <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="currentColor" aria-hidden="true">
+                    <path d="M6 0 7.4 4.6 12 6 7.4 7.4 6 12 4.6 7.4 0 6 4.6 4.6Z" />
+                  </svg>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Photos — infinite carousel, one photo at a time */}
+          <div className="mt-8 sm:mt-10">
+            <PhotoCarousel key={active.id} item={active} dir={dir} onOpen={setViewing} />
+          </div>
+          <div className="mt-8 text-center">
+              <a
+                href={enquire(active).href}
+                target="_blank"
+                rel="noopener"
+                className="btn bg-[#25D366] text-[#0B2A17] hover:bg-[#1EBE5D]"
+              >
+                <WhatsAppIcon className="h-5 w-5" />
+                Enquire about {active.name}
+              </a>
+          </div>
         </div>
       </div>
-    </>
+
+      <Lightbox
+        id={active.id}
+        title={active.name}
+        total={PHOTOS}
+        srcFor={(n) => photoSrc(active.id, n)}
+        fallbackFor={(n) => demoSrc(active.id, n)}
+        enquire={enquire(active)}
+        index={viewing}
+        onClose={() => setViewing(null)}
+        onStep={(d) => setViewing((v) => (v + d + PHOTOS) % PHOTOS)}
+      />
+    </section>
   )
 }

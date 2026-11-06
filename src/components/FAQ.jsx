@@ -5,7 +5,7 @@ export default function FAQ() {
   const [open, setOpen] = useState(null)
 
   return (
-    <section id="faq" className="relative overflow-hidden py-16 lg:py-24" style={{ background: '#faf5ee' }}>
+    <section id="faq" className="relative overflow-hidden py-10 lg:py-14" style={{ background: '#faf5ee' }}>
 
       {/* Large decorative quote mark */}
       <div className="pointer-events-none absolute top-8 right-8 font-display text-[20rem] leading-none select-none hidden lg:block"
@@ -16,13 +16,13 @@ export default function FAQ() {
         <div className="lg:grid lg:grid-cols-[360px_1fr] lg:gap-20">
 
           {/* LEFT — sticky label */}
-          <div className="lg:sticky lg:top-24 lg:self-start mb-12 lg:mb-0">
+          <div className="lg:sticky lg:top-24 lg:self-start mb-8 lg:mb-0">
             <div className="flex items-center gap-3 mb-5">
               <span className="h-px w-8 bg-[#C9973A]" />
               <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#C9973A]">FAQ</span>
             </div>
-            <h2 className="font-display text-5xl lg:text-6xl leading-[1.05] text-[#0b3330] mb-6">
-              Got<br />questions?
+            <h2 className="font-display whitespace-nowrap text-4xl sm:text-5xl leading-[1.05] text-[#0b3330] mb-6">
+              Got questions?
             </h2>
             <p className="text-[0.95rem] leading-relaxed max-w-[28ch]" style={{ color: '#7a6a58' }}>
               Everything you need to know before visiting Sun Artisans or placing an order.
@@ -45,7 +45,7 @@ export default function FAQ() {
                   onClick={() => setOpen(isOpen ? null : i)}
                 >
                   {/* Question */}
-                  <div className="flex items-start justify-between gap-6 py-6">
+                  <div className="flex items-start justify-between gap-6 py-4">
                     <div className="flex items-start gap-4">
                       {/* Number */}
                       <span className="font-display text-sm mt-1 flex-shrink-0 tabular-nums"
@@ -74,7 +74,7 @@ export default function FAQ() {
                     overflow: 'hidden',
                     transition: 'max-height 0.4s cubic-bezier(0.4,0,0.2,1)',
                   }}>
-                    <div className="pl-10 pb-6">
+                    <div className="pl-10 pb-4">
                       <p className="text-[0.95rem] leading-relaxed" style={{ color: '#5a4a3a' }}>{f.a}</p>
                     </div>
                   </div>
