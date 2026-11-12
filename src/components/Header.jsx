@@ -90,7 +90,7 @@ export default function Header() {
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
           <div
-            className="absolute left-0 top-0 bottom-0 w-72 max-w-[85vw] overflow-y-auto shadow-2xl"
+            className="absolute left-0 top-0 bottom-0 flex w-72 max-w-[85vw] flex-col overflow-y-auto shadow-2xl"
             style={{ backgroundColor: '#ffffff', animation: 'slideInLeft 0.3s ease forwards' }}
           >
             <style>{`@keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }`}</style>
@@ -120,7 +120,7 @@ export default function Header() {
               ))}
             </nav>
             {/* WhatsApp CTA */}
-            <div className="px-5 pt-4">
+            <div className="mt-auto border-t border-gray-100 px-5 py-5">
               <a href={waLink()} target="_blank" rel="noopener" className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] py-3 font-semibold text-[#0B2A17] hover:bg-[#1EBE5D]">
                 <WhatsAppIcon className="h-5 w-5" /> WhatsApp us
               </a>
