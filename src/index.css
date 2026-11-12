@@ -81,7 +81,32 @@
 .mandir-out-right { animation: mandir-out-r .4s cubic-bezier(.55,0,1,.45) both; }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-colors;
+  @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-colors;
+
+  /* Shine sweep: z-index -1 inside `isolate` sits above the button's background but below its text */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: btn-shine 4s ease-in-out infinite;
+  }
+  &:hover::after { animation: btn-shine-once 0.8s ease-out; }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after { animation: none; }
+  }
+}
+@keyframes btn-shine {
+  0% { transform: translateX(-100%); }
+  25%, 100% { transform: translateX(100%); }
+}
+@keyframes btn-shine-once {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
 }
 @utility btn-primary { @apply btn bg-kumkum text-chandan-soft hover:bg-[#6f2016]; }
 @utility btn-ghost-dark { @apply btn border border-brass-light/60 text-chandan hover:bg-white/10; }
