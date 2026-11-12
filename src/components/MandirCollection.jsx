@@ -15,21 +15,12 @@ const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.webp`
 // Demo images (Unsplash) — shown only while the real photo file is missing. Delete once real photos are in.
 const u = (id) => `https://images.unsplash.com/photo-${id}?w=700&h=700&fit=crop&q=75`
 const DEMO = {
-  'home-mandirs': ['1582510003544-4d00b7f74220', '1567767292278-a4f21aa2d36e', '1616046229478-9901c5536a45', '1600093463592-8e36ae95ef56', '1586023492125-27b2c045efd7', '1555041469-a586c61ea9bc'].map(u),
   'god-murtis': ['1600618528240-fb9fc964b853', '1600585154340-be6161a56a0c', '1540518614846-7eded433c457', '1513519245088-0e12902e5a38', '1558618666-fcd25c85cd64', '1604014237800-1c9102c219da'].map(u),
   'brass-items': ['1606293926075-69a00dbfde81', '1416879595882-3373a0480b5b', '1586023492125-27b2c045efd7', '1567767292278-a4f21aa2d36e', '1616046229478-9901c5536a45', '1540518614846-7eded433c457'].map(u),
 }
 const demoSrc = (id, n) => DEMO[id]?.[n - 1]
 
 const items = [
-  {
-    id: 'home-mandirs',
-    name: 'Home Mandirs',
-    tag: 'Sacred Spaces',
-    chips: ['Wall-mount', 'Floor-standing', 'Range of sizes & finishes'],
-    text: 'Choose from a range of sizes and finishes — from compact wall-mount to grand floor mandirs. Each piece brings peace and devotion into your home.',
-    icon: <path d="M12 2.5 8 6.5h8l-4-4ZM6 6.5h12v3H6zM7 9.5v11M17 9.5v11M4.5 20.5h15M10 20.5v-5a2 2 0 0 1 4 0v5" />,
-  },
   {
     id: 'god-murtis',
     name: 'God Murtis',
@@ -191,7 +182,7 @@ export default function MandirCollection() {
           role="tablist"
           aria-label="Mandir collection"
           onKeyDown={onKeyDown}
-          className="mx-auto mt-6 grid max-w-4xl grid-cols-3 gap-2 sm:gap-4 lg:mt-8"
+          className="mx-auto mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:gap-4 lg:mt-8"
         >
           {items.map((it, i) => {
             const selected = i === activeIdx
