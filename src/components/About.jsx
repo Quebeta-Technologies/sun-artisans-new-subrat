@@ -177,7 +177,8 @@ export default function About() {
           <div className="mx-auto mt-6 max-w-[60ch] space-y-4 text-[1.05rem] leading-relaxed text-white lg:mx-0">
             <p>
               {store.legalName} is a home decor and art gallery in Udhyamnagar, Pimpri — the place families across
-              PCMC and Pune turn to for artifacts, photo frames, artificial plants, home mandirs, god murtis and brass décor.
+              PCMC and Pune turn to for god murtis, brass items, photo frames, artificial plants, abstract showpieces,
+              dining platters and clocks.
             </p>
             <p>
               Furnishing a new home, choosing a gift, or sourcing for a client project? Everything is curated under one roof.

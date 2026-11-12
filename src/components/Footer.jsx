@@ -15,8 +15,8 @@ export default function Footer() {
             />
           </div>
           <p className="mt-4 max-w-[44ch] text-[0.95rem]">
-            Home decor and art and craft gallery in Udhyamnagar, Pimpri. Artifacts, frames, plants, mandirs, murtis
-            and brass, all under one roof.
+            Home decor and art and craft gallery in Udhyamnagar, Pimpri. God murtis, brass, frames, greens,
+            showpieces, platters and clocks, all under one roof.
           </p>
         </div>
         <div className="text-[0.95rem]">
