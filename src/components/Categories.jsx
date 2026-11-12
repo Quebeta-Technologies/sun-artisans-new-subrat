@@ -13,7 +13,7 @@ const enquiry = (cat) => ({
 
 /* ── Mobile: accordion — tap category name to open/close ── */
 function MobileCategories({ onView }) {
-  const [openId, setOpenId] = useState(null)
+  const [openId, setOpenId] = useState(categories[0].id)
   return (
     <div className="divide-y divide-brass/20 rounded-2xl border border-brass/20 lg:hidden">
       {categories.map((cat) => {
