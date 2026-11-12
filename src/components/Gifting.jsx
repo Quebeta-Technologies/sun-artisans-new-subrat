@@ -18,8 +18,9 @@ export default function Gifting({ image = null }) {
       </svg>
 
       {/* Scallop top — green flows into cream pattern */}
-      <div className="relative leading-[0] w-full" style={{ height: 48 }}>
-        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" className="w-full h-full" style={{ display: 'block' }}>
+      <div className="relative h-8 w-full overflow-hidden leading-[0] sm:h-12">
+        {/* min-width keeps each wave ~120px wide, so narrow screens show fewer, gentler waves instead of squashed ones */}
+        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" className="h-full w-full min-w-[720px]" style={{ display: 'block' }}>
           <path d="M0,0 L0,28 Q60,48 120,28 Q180,8 240,28 Q300,48 360,28 Q420,8 480,28 Q540,48 600,28 Q660,8 720,28 Q780,48 840,28 Q900,8 960,28 Q1020,48 1080,28 Q1140,8 1200,28 Q1260,48 1320,28 Q1380,8 1440,28 L1440,0 Z" fill="#0a2e2b" />
         </svg>
       </div>
