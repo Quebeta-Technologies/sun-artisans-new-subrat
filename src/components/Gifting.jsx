@@ -1,7 +1,52 @@
+import { useEffect, useState } from 'react'
 import { waLink } from '../data/content'
-import Photo from './Photo'
 
 const occasions = ['Housewarmings', 'Weddings', 'Festivals', 'Corporate gifting']
+
+// Needs 3+ images each: with only 2, the outgoing image would re-enter from the top
+const leftSlides = [
+  { src: '/photo/categories/dining-platters/1.png', alt: 'Floral ceramic vase gift' },
+  { src: '/photo/categories/god-items/6.png', alt: 'Brass Ganesha gift' },
+  { src: '/photo/categories/dining-platters/8.png', alt: 'Floral ceramic bowl gift' },
+  { src: '/photo/categories/other-items/1.png', alt: 'Brass Radha Krishna jhula gift' },
+]
+const rightSlides = [
+  { src: '/photo/categories/other-items/8.png', alt: 'Metal vase gift' },
+  { src: '/photo/categories/clocks/11.png', alt: 'Classic table clock gift' },
+  { src: '/photo/categories/abstract-showpieces/4.png', alt: 'Brass tree of life gift' },
+  { src: '/photo/categories/dining-platters/5.png', alt: 'Gold ceramic vase gift' },
+]
+
+// One image visible at a time; every few seconds the next one rises up from below and pushes the current one out the top
+function RisingSlides({ slides, delay = 0 }) {
+  const [i, setI] = useState(0)
+  const n = slides.length
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let interval
+    const start = setTimeout(() => {
+      setI((v) => (v + 1) % n)
+      interval = setInterval(() => setI((v) => (v + 1) % n), 3600)
+    }, 3600 + delay)
+    return () => { clearTimeout(start); clearInterval(interval) }
+  }, [n, delay])
+
+  const prev = (i - 1 + n) % n
+  return slides.map((s, k) => {
+    const moving = k === i || k === prev
+    const pos = k === i ? 'translate-y-0' : k === prev ? '-translate-y-full' : 'translate-y-full'
+    return (
+      <img
+        key={s.src}
+        src={s.src}
+        alt={k === i ? s.alt : ''}
+        aria-hidden={k !== i || undefined}
+        className={`absolute inset-0 h-full w-full object-cover ${pos} ${moving ? 'transition-transform duration-1000 ease-[cubic-bezier(.65,0,.35,1)]' : ''}`}
+      />
+    )
+  })
+}
 
 export default function Gifting({ image = null }) {
   // -mt-px tucks under the dark section above so sub-pixel rounding can't leave a cream seam
@@ -65,21 +110,11 @@ export default function Gifting({ image = null }) {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="arch aspect-[3/5] ring-1 ring-[#C9973A]/30 overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&q=80"
-              alt="Gift hampers at Sun Artisans, Pune"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
+          <div className="arch relative aspect-[3/5] overflow-hidden bg-[#DCC8A6] ring-1 ring-[#C9973A]/30">
+            <RisingSlides slides={leftSlides} />
           </div>
-          <div className="arch mt-16 aspect-[3/5] ring-1 ring-[#C9973A]/30 overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=600&q=80"
-              alt="Brass gifts at Sun Artisans, Pune"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
+          <div className="arch relative mt-16 aspect-[3/5] overflow-hidden bg-[#DCC8A6] ring-1 ring-[#C9973A]/30">
+            <RisingSlides slides={rightSlides} delay={1800} />
           </div>
         </div>
       </div>
