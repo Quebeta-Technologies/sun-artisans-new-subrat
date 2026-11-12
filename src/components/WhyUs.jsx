@@ -75,7 +75,7 @@ export default function WhyUs() {
             <div className="relative overflow-hidden rounded-2xl"
               style={{ border: '2px solid rgba(201,151,58,0.4)' }}>
               <img
-                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=85"
+                src="/photo/why-us.jpg"
                 alt="Sun Artisans store interior"
                 className="w-full object-cover"
                 style={{ height: 380 }}
