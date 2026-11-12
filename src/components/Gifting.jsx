@@ -38,7 +38,10 @@ export default function Gifting({ image = null }) {
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C9973A]">Gifting</span>
             <span className="h-px w-8 bg-[#C9973A]" />
           </div>
-          <h2 className="max-w-[18ch] text-4xl leading-tight sm:text-5xl text-[#0b3330]">Thoughtful gifting, curated for every occasion</h2>
+          <h2 className="text-[clamp(1.4rem,6.6vw,2.25rem)] leading-tight text-[#0b3330] sm:max-w-[18ch] sm:text-5xl">
+            <span className="block whitespace-nowrap sm:inline sm:whitespace-normal">Thoughtful gifting,</span>{' '}
+            <span className="block whitespace-nowrap sm:inline sm:whitespace-normal">curated for every occasion</span>
+          </h2>
           <p className="mt-6 max-w-[58ch] text-ink-soft">
             Looking for the perfect gift? Sun Artisans' gifting collection covers housewarmings, weddings, festivals
             and corporate occasions. From elegant artifacts to brass décor pieces, every gift is chosen to feel personal and premium.
