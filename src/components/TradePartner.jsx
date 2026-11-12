@@ -42,12 +42,12 @@ export default function TradePartner() {
       <div className="relative mx-auto grid max-w-7xl gap-14 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-8 lg:items-center">
         <div>
           {/* subtitle */}
-          <div className="flex items-center gap-3 mb-5">
-            <span className="h-px w-8 bg-[#C9973A]" />
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C9973A]">For Architects &amp; Designers</span>
-            <span className="h-px w-8 bg-[#C9973A]" />
+          <div className="flex items-center gap-2 mb-5 sm:gap-3">
+            <span className="h-px w-5 bg-[#C9973A] sm:w-8" />
+            <span className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.15em] text-[#C9973A] sm:text-xs sm:tracking-[0.3em]">For Architects &amp; Designers</span>
+            <span className="h-px w-5 bg-[#C9973A] sm:w-8" />
           </div>
-          <h2 className="mt-3 max-w-[16ch] text-4xl leading-tight sm:text-5xl" style={{ color: '#f5ede0' }}>Trade partner program</h2>
+          <h2 className="mt-3 whitespace-nowrap text-[clamp(1.5rem,7.8vw,2.25rem)] leading-tight sm:max-w-[16ch] sm:whitespace-normal sm:text-5xl" style={{ color: '#f5ede0' }}>Trade partner program</h2>
           <p className="mt-6 max-w-[56ch]" style={{ color: '#d4c5b0' }}>
             Sun Artisans works closely with architects and interior designers across Pune and PCMC to source
             artifacts, décor and brass pieces for client projects.
