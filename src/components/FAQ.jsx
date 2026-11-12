@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { faqs } from '../data/content'
 
 export default function FAQ() {
-  const [open, setOpen] = useState(null)
+  const [open, setOpen] = useState(0)
 
   return (
     <section id="faq" className="relative overflow-hidden py-10 lg:py-14" style={{ background: '#faf5ee' }}>
