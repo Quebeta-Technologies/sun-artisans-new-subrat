@@ -20,6 +20,8 @@
   html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
   body {
     @apply bg-chandan text-ink font-sans antialiased;
+    /* clip (not hidden) stops sideways wobble on mobile without breaking position: sticky */
+    overflow-x: clip;
     font-size: 1.0625rem;
     line-height: 1.65;
   }

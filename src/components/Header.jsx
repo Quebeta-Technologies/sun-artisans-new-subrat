@@ -37,7 +37,8 @@ export default function Header() {
       style={{
         backgroundColor: `rgb(255 255 255 / ${0.96 * p})`,
         boxShadow: `0 1px 12px rgb(0 0 0 / ${0.08 * p})`,
-        backdropFilter: p > 0.05 ? `blur(${8 * p}px)` : undefined,
+        // Fixed radius: animating the blur amount every scroll frame is very expensive on phones
+        backdropFilter: p > 0.05 ? 'blur(8px)' : undefined,
       }}
     >
       {/* Dark fade for legibility over the video — disappears as the white comes in */}
