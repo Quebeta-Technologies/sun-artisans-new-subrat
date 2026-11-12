@@ -28,13 +28,13 @@ export const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(stor
 
 // Replace `image: null` with an imported photo (e.g. import artifacts from '../assets/artifacts.jpg')
 export const categories = [
-  { id: 'artifacts', name: 'Artifacts', blurb: 'Unique decorative artifacts to elevate every corner of your home', image: null },
-  { id: 'photo-frames', name: 'Photo Frames', blurb: 'Premium frames for family photos and wall art', image: null },
-  { id: 'artificial-plants', name: 'Artificial Plants', blurb: 'Low-maintenance greenery that never fades', image: null },
-  { id: 'home-decor', name: 'Home Decor Items', blurb: 'Curated pieces to style every room', image: null },
-  { id: 'home-mandirs', name: 'Home Mandirs', blurb: 'Elegant mandirs crafted for everyday worship', image: null, link: '#mandir' },
-  { id: 'god-murtis', name: 'God Murtis', blurb: 'Traditional and modern murtis in a range of sizes', image: null, link: '#mandir' },
-  { id: 'brass-items', name: 'Brass Items', blurb: 'Handcrafted brass décor and pooja essentials', image: null, link: '#mandir' },
+  { id: 'god-items', name: 'God Items', blurb: 'Divine murtis, idols and sacred décor for your puja space', image: null },
+  { id: 'frames', name: 'Frames', blurb: 'Premium frames for family photos, art and cherished memories', image: null },
+  { id: 'greens', name: 'Greens', blurb: 'Low-maintenance artificial plants and greenery that never fade', image: null },
+  { id: 'other-items', name: 'Other Items', blurb: 'Curated home décor pieces to style every corner of your home', image: null },
+  { id: 'abstract-showpieces', name: 'Abstract Showpieces', blurb: 'Bold, artistic showpieces that make a statement in any room', image: null },
+  { id: 'dining-platters', name: 'Dining Platters', blurb: 'Elegant platters and serveware to elevate your dining experience', image: null },
+  { id: 'clocks', name: 'Clocks', blurb: 'Stylish wall and table clocks that blend art with function', image: null },
 ]
 
 export const whyUs = [
