@@ -3,30 +3,70 @@ import { categories, waLink } from '../data/content'
 import { Ornament, WhatsAppIcon } from './Icons'
 import Lightbox, { SmartImg } from './Lightbox'
 
-/*
- * Photos: put 12 images per category in public/photo/categories/<category-id>/1.webp … 12.webp
- * e.g. public/photo/categories/artifacts/1.webp
- * Category ids: artifacts, photo-frames, artificial-plants, home-decor, home-mandirs, god-murtis, brass-items
- * Recommended size: 800 × 800 px (square). Missing files show a brass lattice placeholder.
- */
 const PHOTOS_PER_CATEGORY = 12
 const photoSrc = (catId, n) => `/photo/categories/${catId}/${n}.png`
-
 
 const enquiry = (cat) => ({
   href: cat.link ?? waLink(`Hi Sun Artisans, I'd like to enquire about ${cat.name}.`),
   external: !cat.link,
 })
 
+/* ── Mobile: all categories stacked, each with name + photo grid ── */
+function MobileCategories({ onView }) {
+  return (
+    <div className="space-y-10 lg:hidden">
+      {categories.map((cat) => {
+        const { href, external } = enquiry(cat)
+        return (
+          <div key={cat.id}>
+            {/* Category name header */}
+            <div className="mb-3 flex items-center gap-3">
+              <span className="h-px flex-1 bg-brass/30" />
+              <h3 className="font-display text-xl text-peacock-deep">{cat.name}</h3>
+              <span className="h-px flex-1 bg-brass/30" />
+            </div>
+            {/* Photo grid */}
+            <ul className="grid grid-cols-3 gap-2">
+              {Array.from({ length: PHOTOS_PER_CATEGORY }, (_, i) => (
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() => onView(cat, i)}
+                    aria-label={`View ${cat.name} photo ${i + 1}`}
+                    className="group relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-[#DCC8A6] ring-1 ring-ink/10"
+                  >
+                    <SmartImg
+                      src={photoSrc(cat.id, i + 1)}
+                      alt=""
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {/* Enquire button */}
+            <div className="mt-4 text-center">
+              <a href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})} className="btn-primary">
+                {external && <WhatsAppIcon className="h-5 w-5" />}
+                Enquire about {cat.name}
+              </a>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Categories() {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [viewing, setViewing] = useState(null) // index of photo open in the lightbox
+  const [viewing, setViewing] = useState(null)
+  const [lightboxCat, setLightboxCat] = useState(categories[0])
   const tabRefs = useRef([])
   const [bar, setBar] = useState({ top: 0, height: 0 })
   const active = categories[activeIdx]
   const { href: enquireHref, external: enquireExternal } = enquiry(active)
 
-  // Sliding brass indicator follows the active category (desktop list)
   useLayoutEffect(() => {
     const measure = () => {
       const el = tabRefs.current[activeIdx]
@@ -37,7 +77,6 @@ export default function Categories() {
     return () => window.removeEventListener('resize', measure)
   }, [activeIdx])
 
-  // Up/Down (and Left/Right) arrow keys move between categories
   const onKeyDown = (e) => {
     const keys = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }
     if (!(e.key in keys) && e.key !== 'Home' && e.key !== 'End') return
@@ -53,6 +92,11 @@ export default function Categories() {
     [],
   )
 
+  const openMobilePhoto = (cat, idx) => {
+    setLightboxCat(cat)
+    setViewing(idx)
+  }
+
   return (
     <section id="categories" aria-labelledby="categories-heading" className="relative bg-chandan-soft py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -63,20 +107,23 @@ export default function Categories() {
           <Ornament className="mx-auto mt-4 h-5 w-auto text-brass" />
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[340px_1fr] lg:gap-12">
-          {/* ── Left: category list ── */}
+        {/* ── Mobile: all categories stacked ── */}
+        <MobileCategories onView={openMobilePhoto} />
+
+        {/* ── Desktop: tab layout ── */}
+        <div className="hidden lg:grid lg:grid-cols-[340px_1fr] lg:gap-12">
+          {/* Left: category list */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <div
               role="tablist"
               aria-label="Product categories"
               aria-orientation="vertical"
               onKeyDown={onKeyDown}
-              className="relative flex flex-wrap justify-center gap-2 lg:flex-col lg:justify-start lg:gap-0 lg:border-l lg:border-ink/15"
+              className="relative flex flex-col gap-0 border-l border-ink/15"
             >
-              {/* Sliding indicator */}
               <span
                 aria-hidden="true"
-                className="absolute -left-px hidden w-0.5 bg-brass transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] lg:block"
+                className="absolute -left-px w-0.5 bg-brass transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]"
                 style={{ top: bar.top, height: bar.height }}
               />
               {categories.map((c, i) => {
@@ -94,32 +141,24 @@ export default function Categories() {
                     onMouseEnter={() => setActiveIdx(i)}
                     onFocus={() => setActiveIdx(i)}
                     onClick={() => setActiveIdx(i)}
-                    className={`relative flex cursor-pointer items-center gap-4 text-left transition-colors
-                      rounded-full border px-4 py-2 text-sm
-                      lg:rounded-none lg:border-0 lg:px-6 lg:py-3.5 lg:text-base
-                      ${selected
-                        ? 'border-peacock bg-peacock text-chandan lg:bg-transparent lg:text-peacock-deep'
-                        : 'border-ink/20 text-ink-soft hover:text-peacock-deep'}`}
+                    className={`relative flex cursor-pointer items-center gap-4 px-6 py-3.5 text-left transition-colors
+                      ${selected ? 'text-peacock-deep' : 'text-ink-soft hover:text-peacock-deep'}`}
                   >
-                    <span className={`hidden w-6 font-display text-sm lg:inline ${selected ? 'text-brass' : 'text-ink-soft/60'}`}>
+                    <span className={`w-6 font-display text-sm ${selected ? 'text-brass' : 'text-ink-soft/60'}`}>
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <span className={`font-display whitespace-nowrap lg:text-[1.35rem] lg:transition-transform lg:duration-300 ${selected ? 'lg:translate-x-1.5' : ''}`}>
+                    <span className={`font-display text-[1.35rem] transition-transform duration-300 ${selected ? 'translate-x-1.5' : ''}`}>
                       {c.name}
                     </span>
-                    <svg
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"
-                      className={`ml-auto hidden h-5 w-5 shrink-0 text-brass transition-all duration-300 lg:block ${selected ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`}
-                    >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"
+                      className={`ml-auto h-5 w-5 shrink-0 text-brass transition-all duration-300 ${selected ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`}>
                       <path d="M5 12h14m-5-5 5 5-5 5" />
                     </svg>
                   </button>
                 )
               })}
             </div>
-
-            {/* Active category: big outlined numeral + blurb + enquiry (desktop) */}
-            <div key={active.id} className="cat-fade mt-10 hidden lg:block">
+            <div key={active.id} className="cat-fade mt-10">
               <div className="flex items-end gap-3">
                 <span className="cat-numeral font-display text-7xl leading-none">{String(activeIdx + 1).padStart(2, '0')}</span>
                 <span className="mb-2 text-sm uppercase tracking-[0.2em] text-ink-soft">/ {String(categories.length).padStart(2, '0')}</span>
@@ -132,17 +171,14 @@ export default function Categories() {
             </div>
           </div>
 
-          {/* ── Right: 12-photo mosaic of the active category ── */}
+          {/* Right: photo mosaic */}
           <div id="cat-panel" role="tabpanel" aria-labelledby={`cat-tab-${active.id}`}>
-            <ul
-              key={active.id}
-              className="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-4"
-            >
+            <ul key={active.id} className="grid grid-cols-4 gap-3">
               {Array.from({ length: PHOTOS_PER_CATEGORY }, (_, i) => (
                 <li key={i} className="cat-tile" style={{ animationDelay: `${i * 35}ms` }}>
                   <button
                     type="button"
-                    onClick={() => setViewing(i)}
+                    onClick={() => { setLightboxCat(active); setViewing(i) }}
                     aria-label={`View ${active.name} photo ${i + 1}`}
                     className="group relative block aspect-square h-full w-full cursor-zoom-in overflow-hidden rounded-xl bg-[#DCC8A6] ring-1 ring-ink/10"
                   >
@@ -155,25 +191,16 @@ export default function Categories() {
                 </li>
               ))}
             </ul>
-
-            {/* Blurb + enquiry (mobile) */}
-            <div className="mt-6 text-center lg:hidden">
-              <p className="text-ink-soft">{active.blurb}</p>
-              <a href={enquireHref} {...(enquireExternal ? { target: '_blank', rel: 'noopener' } : {})} className="btn-primary mt-4">
-                {enquireExternal && <WhatsAppIcon className="h-5 w-5" />}
-                Enquire about {active.name}
-              </a>
-            </div>
           </div>
         </div>
       </div>
 
       <Lightbox
-        id={active.id}
-        title={active.name}
+        id={lightboxCat.id}
+        title={lightboxCat.name}
         total={PHOTOS_PER_CATEGORY}
-        srcFor={(n) => photoSrc(active.id, n)}
-        enquire={enquiry(active)}
+        srcFor={(n) => photoSrc(lightboxCat.id, n)}
+        enquire={enquiry(lightboxCat)}
         index={viewing}
         onClose={() => setViewing(null)}
         onStep={step}
