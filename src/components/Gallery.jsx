@@ -1,13 +1,14 @@
 const galleryImages = [
-  { src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80', alt: 'Styled living room corner' },
-  { src: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=500&q=80', alt: 'Elegant home interior' },
-  { src: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=500&q=80', alt: 'Mandir and pooja items' },
-  { src: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80', alt: 'Living room decor' },
-  { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80', alt: 'Brass decor pieces' },
-  { src: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=500&q=80', alt: 'Gifting collection' },
-  { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80', alt: 'Artifacts display' },
-  { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80', alt: 'Photo frames wall' },
-  { src: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&q=80', alt: 'Artificial plants' },
+  { src: '/photo/gallery/1.jpg', alt: 'Inside the Sun Artisans store, Udhyamnagar, Pimpri' },
+  { src: '/photo/gallery/2.jpg', alt: 'Bronze-finish face sculptures on display' },
+  { src: '/photo/gallery/3.jpg', alt: 'Lit display shelves of figurines and artifacts' },
+  { src: '/photo/gallery/4.jpg', alt: 'Store aisle with decor and frames' },
+  { src: '/photo/gallery/5.jpg', alt: 'Brass temple model' },
+  { src: '/photo/gallery/6.jpg', alt: 'Brass Radha Krishna jhula' },
+  { src: '/photo/gallery/7.jpg', alt: 'Abstract ceramic vase' },
+  { src: '/photo/gallery/8.jpg', alt: 'Floral ceramic vase on glass shelf' },
+  { src: '/photo/gallery/9.jpg', alt: 'Decor and artificial flower displays in store' },
+  { src: '/photo/gallery/10.jpg', alt: 'White abstract sculpture' },
 ]
 
 const row1 = [...galleryImages, ...galleryImages, ...galleryImages]
