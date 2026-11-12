@@ -83,15 +83,64 @@ export default function Header() {
         </div>
       </div>
 
-      {open && (
-        <nav id="mobile-nav" className="border-t border-ink/10 px-5 pb-5 lg:hidden" aria-label="Mobile">
-          {nav.map((n) => (
-            <a key={n.href} href={n.href} onClick={() => setOpen(false)} className="block border-b border-ink/10 py-3 text-ink/80">
-              {n.label}
+      {/* Mobile slide-in drawer (right to left) */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${open ? 'visible' : 'invisible'}`}
+        aria-hidden={!open}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
+          onClick={() => setOpen(false)}
+        />
+        {/* Drawer panel */}
+        <nav
+          id="mobile-nav"
+          aria-label="Mobile"
+          className={`absolute right-0 top-0 h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] flex flex-col
+            ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        >
+          {/* Drawer header */}
+          <div className="flex items-center justify-between border-b border-ink/10 px-5 py-4">
+            <img
+              src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png"
+              alt={store.legalName}
+              className="h-10 w-auto object-contain"
+            />
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="rounded-md p-2 text-ink/60 hover:text-ink"
+            >
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
+            </button>
+          </div>
+          {/* Nav links */}
+          <div className="flex-1 overflow-y-auto px-5 py-4">
+            {nav.map((n) => (
+              <a
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center border-b border-ink/10 py-4 text-base font-medium text-ink/80 hover:text-peacock-deep"
+              >
+                {n.label}
+                <svg viewBox="0 0 24 24" className="ml-auto h-4 w-4 text-brass" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </a>
+            ))}
+          </div>
+          {/* Bottom CTA */}
+          <div className="border-t border-ink/10 px-5 py-5">
+            <a href={waLink()} target="_blank" rel="noopener" className="btn w-full justify-center bg-[#25D366] text-[#0B2A17] hover:bg-[#1EBE5D]">
+              <WhatsAppIcon className="h-5 w-5" /> WhatsApp us
             </a>
-          ))}
+          </div>
         </nav>
-      )}
+      </div>
     </header>
   )
 }
