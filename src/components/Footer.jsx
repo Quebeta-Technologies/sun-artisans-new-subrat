@@ -35,7 +35,13 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-5 py-5 text-center text-sm text-chandan/50 sm:flex-row sm:justify-between sm:text-left lg:px-8">
-          <p>© {new Date().getFullYear()} {store.legalName}. All rights reserved.</p>
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-5">
+            <p>© {new Date().getFullYear()} {store.legalName}. All rights reserved.</p>
+            <nav aria-label="Legal" className="flex gap-4">
+              <a href="/privacy-policy" className="hover:text-brass-light">Privacy Policy</a>
+              <a href="/terms" className="hover:text-brass-light">Terms &amp; Conditions</a>
+            </nav>
+          </div>
           <p className="flex items-center gap-1.5">
             Made with
             <svg viewBox="0 0 24 24" className="h-4 w-4 text-red-500" fill="currentColor" aria-label="love" role="img">

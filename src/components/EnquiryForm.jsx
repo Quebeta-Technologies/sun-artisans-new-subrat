@@ -99,6 +99,10 @@ export default function EnquiryForm({ fields, intro, submitLabel, dark = false }
         <button type="submit" disabled={status === 'sending'} className="btn-primary disabled:opacity-60">
           {status === 'sending' ? 'Sending…' : submitLabel}
         </button>
+        <p className={`mt-3 text-xs ${dark ? 'text-chandan/60' : 'text-ink-soft'}`}>
+          By submitting, you agree to our{' '}
+          <a href="/privacy-policy" className="underline underline-offset-2 hover:text-brass">Privacy Policy</a>.
+        </p>
       </div>
     </form>
   )

@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react'
 import { store, waLink, telLink } from '../data/content'
 import { WhatsAppIcon } from './Icons'
 
+// Leading "/" so the links also work from the legal pages
 const nav = [
-  { href: '#categories', label: 'Shop' },
-  { href: '#mandir', label: 'Mandirs & Murtis' },
-  { href: '#gifting', label: 'Gifting' },
-  { href: '#trade', label: 'Trade partners' },
-  { href: '#visit', label: 'Visit us' },
+  { href: '/#categories', label: 'Shop' },
+  { href: '/#mandir', label: 'Mandirs & Murtis' },
+  { href: '/#gifting', label: 'Gifting' },
+  { href: '/#trade', label: 'Trade partners' },
+  { href: '/#visit', label: 'Visit us' },
 ]
 
-export default function Header() {
+// `solid`: always white (pages without the hero video behind the header)
+export default function Header({ solid: forceSolid = false }) {
   const [open, setOpen] = useState(false)
   const [progress, setProgress] = useState(0) // 0 = top of page, 1 = scrolled past FADE_PX
 
@@ -27,7 +29,7 @@ export default function Header() {
     return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
   }, [])
 
-  const p = open ? 1 : progress
+  const p = open || forceSolid ? 1 : progress
   const solid = p > 0.55 // switch text/logo to dark once the background is mostly white
 
   return (
@@ -48,7 +50,7 @@ export default function Header() {
         style={{ opacity: 1 - p }}
       />
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <a href="#top" className="flex items-center" aria-label={`${store.legalName} home`}>
+        <a href="/#top" className="flex items-center" aria-label={`${store.legalName} home`}>
           <img
             src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png"
             alt={store.legalName}

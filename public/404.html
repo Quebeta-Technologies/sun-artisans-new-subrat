@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Page not found | Sun Artisans LLP</title>
+  <meta name="theme-color" content="#09302F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --peacock-deep: #09302F; --peacock: #0E4544; --brass: #B0832F; --brass-light: #D9B56A;
+      --kumkum: #8C2A1C; --chandan: #F4EBDD;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      min-height: 100vh; min-height: 100svh;
+      display: grid; place-items: center; padding: 32px 16px;
+      background: radial-gradient(circle at 50% 30%, var(--peacock) 0%, var(--peacock-deep) 70%);
+      color: var(--chandan); font-family: "Hanken Grotesk", system-ui, sans-serif; text-align: center;
+      overflow-x: clip;
+    }
+    main { position: relative; max-width: 520px; }
+    .mandala { position: absolute; left: 50%; top: 42%; width: 560px; height: 560px; transform: translate(-50%, -50%);
+      color: var(--brass-light); opacity: .07; pointer-events: none; z-index: -1; }
+    img { height: 56px; width: auto; filter: brightness(0) invert(1); }
+    .code { margin-top: 28px; font-family: "Marcellus", Georgia, serif; font-size: clamp(5rem, 28vw, 9rem); line-height: 1;
+      color: transparent; -webkit-text-stroke: 1.5px var(--brass-light); letter-spacing: .04em; }
+    h1 { margin-top: 12px; font-family: "Marcellus", Georgia, serif; font-weight: 400; font-size: clamp(1.6rem, 6vw, 2.2rem); }
+    p { margin-top: 12px; color: rgb(244 235 221 / .75); line-height: 1.6; }
+    .actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    a.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 12px 24px;
+      font-weight: 600; font-size: .95rem; text-decoration: none; transition: background-color .2s; }
+    .primary { background: var(--kumkum); color: var(--chandan); }
+    .primary:hover { background: #6f2016; }
+    .ghost { border: 1px solid rgb(217 181 106 / .6); color: var(--chandan); }
+    .ghost:hover { background: rgb(255 255 255 / .1); }
+  </style>
+</head>
+<body>
+  <main>
+    <svg class="mandala" viewBox="0 0 200 200" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="100" cy="100" r="95" stroke-width=".6" /><circle cx="100" cy="100" r="78" stroke-width=".6" />
+      <circle cx="100" cy="100" r="60" stroke-width=".6" /><circle cx="100" cy="100" r="42" stroke-width=".6" />
+      <circle cx="100" cy="100" r="24" stroke-width=".6" />
+    </svg>
+    <a href="/" aria-label="Sun Artisans LLP home">
+      <img src="/photo/SUN%20Artisans%20LLP%20-%20Logo%20Design%20-%20FINAL%20-%2018-3-26%20%20%20%201.png" alt="Sun Artisans LLP" />
+    </a>
+    <div class="code" aria-hidden="true">404</div>
+    <h1>This page has wandered off</h1>
+    <p>The page you're looking for doesn't exist or may have moved. Let's take you back to our collection.</p>
+    <div class="actions">
+      <a class="btn primary" href="/">Back to home</a>
+      <a class="btn ghost" href="/#categories">Shop by category</a>
+    </div>
+  </main>
+</body>
+</html>
