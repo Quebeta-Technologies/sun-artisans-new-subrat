@@ -3,9 +3,9 @@ import { waLink } from '../data/content'
 import { Ornament, WhatsAppIcon } from './Icons'
 import Lightbox, { SmartImg } from './Lightbox'
 
-// Photos live in public/photo/mandir/<id>/1.png … 6.png (square, ~800 × 800 px)
+// Photos live in public/photo/mandir/<id>/1.webp … 6.webp (square, ~800 × 800 px)
 const PHOTOS = 6
-const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.png`
+const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.webp`
 
 const items = [
   {
@@ -101,7 +101,7 @@ function PhotoCarousel({ item, dir, onOpen }) {
               >
                 <SmartImg
                   src={photoSrc(item.id, n + 1)}
-                  alt=""
+                  alt={clone ? '' : `${item.name} ${n + 1} – Sun Artisans, Pimpri-Chinchwad, Pune`}
                   tone="dark"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />

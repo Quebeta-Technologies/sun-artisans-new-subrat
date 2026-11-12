@@ -3,7 +3,12 @@ import { store, telLink } from '../data/content'
 
 export default function PrivacyPolicy() {
   return (
-    <LegalPage title="Privacy Policy" updated="12 November 2026">
+    <LegalPage
+      title="Privacy Policy"
+      path="/privacy-policy"
+      description="How Sun Artisans LLP, Pimpri, Pune collects, uses and protects the personal information you share through our website enquiry forms."
+      updated="12 November 2026"
+    >
       <p>
         {store.legalName} (“Sun Artisans”, “we”, “us”) respects your privacy. This policy explains what personal
         information we collect through this website, why we collect it, and the choices you have. It is published in

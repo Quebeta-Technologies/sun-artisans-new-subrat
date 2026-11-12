@@ -3,10 +3,18 @@ import Header from './Header'
 import Footer from './Footer'
 import { Ornament } from './Icons'
 
-export default function LegalPage({ title, updated, children }) {
+/* global __SITE_URL__ */
+// These pages share index.html, so swap in their own title, description and canonical URL
+export default function LegalPage({ title, description, path, updated, children }) {
   useEffect(() => {
+    const url = `${__SITE_URL__}${path}`
     document.title = `${title} | Sun Artisans LLP`
-  }, [title])
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', url)
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', url)
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', `${title} | Sun Artisans LLP`)
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description)
+  }, [title, description, path])
 
   return (
     <>

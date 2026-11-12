@@ -4,7 +4,8 @@ import { Ornament, WhatsAppIcon } from './Icons'
 import Lightbox, { SmartImg } from './Lightbox'
 
 const PHOTOS_PER_CATEGORY = 12
-const photoSrc = (catId, n) => `/photo/categories/${catId}/${n}.png`
+const photoSrc = (catId, n) => `/photo/categories/${catId}/${n}.webp`
+const photoAlt = (cat, n) => `${cat.name} ${n} – Sun Artisans home decor store, Pimpri-Chinchwad, Pune`
 
 const enquiry = (cat) => ({
   href: cat.link ?? waLink(`Hi Sun Artisans, I'd like to enquire about ${cat.name}.`),
@@ -50,7 +51,7 @@ function MobileCategories({ onView }) {
                       >
                         <SmartImg
                           src={photoSrc(cat.id, i + 1)}
-                          alt=""
+                          alt={photoAlt(cat, i + 1)}
                           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         />
                       </button>
@@ -198,7 +199,7 @@ export default function Categories() {
                   >
                     <SmartImg
                       src={photoSrc(active.id, i + 1)}
-                      alt=""
+                      alt={photoAlt(active, i + 1)}
                       className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
                   </button>

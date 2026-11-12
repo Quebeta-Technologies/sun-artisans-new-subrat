@@ -38,7 +38,7 @@ export const categories = [
 ]
 
 export const whyUs = [
-  { title: 'Wide range under one roof', text: 'Artifacts, frames, plants, mandirs, murtis and brass — no need to visit multiple stores.' },
+  { title: 'Wide range under one roof', text: 'God murtis, brass items, frames, greens, showpieces, platters and clocks — no need to visit multiple stores.' },
   { title: 'Premium quality', text: 'Every piece is chosen for craftsmanship and lasting quality.' },
   { title: 'Styling guidance', text: 'Our team helps you choose pieces that fit your space and style.' },
   { title: 'Trusted local store', text: 'A name PCMC and Pune families have relied on for their home decor needs.' },
@@ -55,7 +55,7 @@ export const gallery = [
 
 export const faqs = [
   { q: 'Where is Sun Artisans located?', a: 'Sun Artisans is located at Plot No. 106, Ground Floor, Shruthi Enclave, Annasaheb Magar Stadium Road, Udhyamnagar, Pimpri, Pune – 411018.' },
-  { q: 'What products does Sun Artisans sell?', a: 'Sun Artisans offers artifacts, photo frames, artificial plants, home decor items, home mandirs, god murtis and brass items, all under one roof.' },
+  { q: 'What products does Sun Artisans sell?', a: 'Sun Artisans offers god murtis and idols, brass items, photo frames and wall art, artificial plants, abstract showpieces, dining platters, clocks and home decor items, all under one roof.' },
   { q: 'Does Sun Artisans work with architects and interior designers?', a: 'Yes — Sun Artisans has a dedicated trade partner program for architects and interior designers, offering trade pricing and project support.' },
   { q: 'Does Sun Artisans offer bulk gifting orders?', a: 'Yes, Sun Artisans offers a curated gifting collection for housewarmings, weddings, festivals and corporate occasions, with bulk-order enquiry support.' },
   { q: "What are Sun Artisans' store timings?", a: 'Sun Artisans is open from 10:30 AM to 8:30 PM.' },

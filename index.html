@@ -3,30 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sun Artisans LLP | Home Decor, Artifacts, Mandir &amp; Murti Store in Pimpri-Chinchwad, Pune</title>
-    <meta name="description" content="Sun Artisans is Pimpri-Chinchwad's one-stop home decor gallery for artifacts, photo frames, artificial plants, home mandirs, god murtis and brass items. Trade tie-ups available for architects and interior designers. WhatsApp or visit our Udhyamnagar store today." />
-    <meta name="keywords" content="home decor store Pimpri Chinchwad, artifacts shop Pune, mandir and murti store Pune, home decor Pimpri, god murti shop Pimpri Chinchwad, brass items for home Pune, artificial plants shop Pimpri, gifting store Pune, interior designer trade partner Pune, photo frames shop PCMC" />
-    <link rel="canonical" href="https://www.sunartisans.in/" />
+    <!-- %SITE_URL% is filled in at build time (see vite.config.js): the Vercel production domain, so it follows sunartisans.com once connected -->
+    <title>Sun Artisans | Home Decor, God Murtis &amp; Brass Items Store in Pimpri-Chinchwad, Pune</title>
+    <meta name="description" content="Sun Artisans, Udhyamnagar, Pimpri: god murtis, brass items, photo frames, artificial plants, showpieces, dining platters and clocks under one roof. Gifting and trade pricing for designers." />
+    <link rel="canonical" href="%SITE_URL%/" />
     <meta name="theme-color" content="#0E4544" />
 
-    <!-- Open Graph (swap og:image for storefront/hero photo when available) -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Sun Artisans LLP | Home Decor, Mandir & Murti Store in Pimpri-Chinchwad" />
-    <meta property="og:description" content="Artifacts, photo frames, artificial plants, home mandirs, god murtis and brass décor — all under one roof in Udhyamnagar, Pimpri." />
-    <meta property="og:image" content="/og-logo-dark.png" />
+    <meta property="og:site_name" content="Sun Artisans LLP" />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:title" content="Sun Artisans | Home Decor, God Murtis & Brass Items Store in Pimpri-Chinchwad" />
+    <meta property="og:description" content="God murtis, brass items, frames, artificial plants, showpieces, platters and clocks — all under one roof in Udhyamnagar, Pimpri, Pune." />
+    <meta property="og:image" content="%SITE_URL%/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sun Artisans store front, Udhyamnagar, Pimpri" />
     <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" as="image" href="/video/hero-poster.jpg" fetchpriority="high" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <!-- LocalBusiness schema. TODO: add geo coordinates once confirmed from Google Business Profile. -->
+    <!-- LocalBusiness schema. TODO: add "geo" coordinates and "sameAs" social links once confirmed. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": ["HomeGoodsStore", "GiftShop"],
+      "@id": "%SITE_URL%/#store",
       "name": "Sun Artisans LLP",
-      "description": "Home decor and art and craft gallery for artifacts, photo frames, artificial plants, home mandirs, god murtis and brass items.",
+      "url": "%SITE_URL%/",
+      "logo": "%SITE_URL%/icon-512.png",
+      "image": "%SITE_URL%/og-image.jpg",
+      "priceRange": "₹₹",
+      "description": "Home decor and art and craft gallery for god murtis, brass items, photo frames, artificial plants, abstract showpieces, dining platters and clocks.",
       "telephone": "+91-9372830261",
       "email": "prabhu.artisans@gmail.com",
       "address": {
@@ -52,7 +67,7 @@
       "@type": "FAQPage",
       "mainEntity": [
         {"@type":"Question","name":"Where is Sun Artisans located?","acceptedAnswer":{"@type":"Answer","text":"Sun Artisans is located at Plot No. 106, Ground Floor, Shruthi Enclave, Annasaheb Magar Stadium Road, Udhyamnagar, Pimpri, Pune – 411018."}},
-        {"@type":"Question","name":"What products does Sun Artisans sell?","acceptedAnswer":{"@type":"Answer","text":"Sun Artisans offers artifacts, photo frames, artificial plants, home decor items, home mandirs, god murtis and brass items, all under one roof."}},
+        {"@type":"Question","name":"What products does Sun Artisans sell?","acceptedAnswer":{"@type":"Answer","text":"Sun Artisans offers god murtis and idols, brass items, photo frames and wall art, artificial plants, abstract showpieces, dining platters, clocks and home decor items, all under one roof."}},
         {"@type":"Question","name":"Does Sun Artisans work with architects and interior designers?","acceptedAnswer":{"@type":"Answer","text":"Yes — Sun Artisans has a dedicated trade partner program for architects and interior designers, offering trade pricing and project support."}},
         {"@type":"Question","name":"Does Sun Artisans offer bulk gifting orders?","acceptedAnswer":{"@type":"Answer","text":"Yes, Sun Artisans offers a curated gifting collection for housewarmings, weddings, festivals and corporate occasions, with bulk-order enquiry support."}},
         {"@type":"Question","name":"What are Sun Artisans' store timings?","acceptedAnswer":{"@type":"Answer","text":"Sun Artisans is open from 10:30 AM to 8:30 PM."}},

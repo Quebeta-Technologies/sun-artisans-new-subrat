@@ -1,10 +1,14 @@
 export default function Hero() {
   return (
     <section id="top" className="bg-white pb-3 sm:pb-4">
+      {/* The design has no visible headline over the video; this gives search engines and screen readers the page's main heading */}
+      <h1 className="sr-only">Sun Artisans – Home Decor, God Murtis, Brass Items &amp; Gifting Store in Pimpri-Chinchwad, Pune</h1>
       {/* Full-bleed video from the very top (the header floats over it); curved bottom corners */}
       <div className="relative h-svh min-h-130 w-full overflow-hidden rounded-b-2xl bg-peacock-deep shadow-xl shadow-black/15 sm:rounded-b-3xl">
         <video
-          src="/photo/Landscape video 90 MB.mp4"
+          src="/video/hero.mp4"
+          poster="/video/hero-poster.jpg"
+          preload="metadata"
           autoPlay
           muted
           loop

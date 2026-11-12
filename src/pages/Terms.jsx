@@ -3,7 +3,12 @@ import { store, telLink } from '../data/content'
 
 export default function Terms() {
   return (
-    <LegalPage title="Terms & Conditions" updated="12 November 2026">
+    <LegalPage
+      title="Terms & Conditions"
+      path="/terms"
+      description="Terms for using the Sun Artisans LLP website: product photos and prices, enquiries, trade and bulk orders, and governing law."
+      updated="12 November 2026"
+    >
       <p>
         These terms apply to your use of this website, operated by {store.legalName} (“Sun Artisans”, “we”, “us”). By
         using the website you agree to them. If you do not agree, please do not use the website.

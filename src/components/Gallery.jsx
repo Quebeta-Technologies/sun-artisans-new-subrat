@@ -1,14 +1,14 @@
 const galleryImages = [
-  { src: '/photo/gallery/1.jpg', alt: 'Inside the Sun Artisans store, Udhyamnagar, Pimpri' },
-  { src: '/photo/gallery/2.jpg', alt: 'Bronze-finish face sculptures on display' },
-  { src: '/photo/gallery/3.jpg', alt: 'Lit display shelves of figurines and artifacts' },
-  { src: '/photo/gallery/4.jpg', alt: 'Store aisle with decor and frames' },
-  { src: '/photo/gallery/5.jpg', alt: 'Brass temple model' },
-  { src: '/photo/gallery/6.jpg', alt: 'Brass Radha Krishna jhula' },
-  { src: '/photo/gallery/7.jpg', alt: 'Abstract ceramic vase' },
-  { src: '/photo/gallery/8.jpg', alt: 'Floral ceramic vase on glass shelf' },
-  { src: '/photo/gallery/9.jpg', alt: 'Decor and artificial flower displays in store' },
-  { src: '/photo/gallery/10.jpg', alt: 'White abstract sculpture' },
+  { src: '/photo/gallery/1.webp', alt: 'Inside the Sun Artisans store, Udhyamnagar, Pimpri' },
+  { src: '/photo/gallery/2.webp', alt: 'Bronze-finish face sculptures on display' },
+  { src: '/photo/gallery/3.webp', alt: 'Lit display shelves of figurines and artifacts' },
+  { src: '/photo/gallery/4.webp', alt: 'Store aisle with decor and frames' },
+  { src: '/photo/gallery/5.webp', alt: 'Brass temple model' },
+  { src: '/photo/gallery/6.webp', alt: 'Brass Radha Krishna jhula' },
+  { src: '/photo/gallery/7.webp', alt: 'Abstract ceramic vase' },
+  { src: '/photo/gallery/8.webp', alt: 'Floral ceramic vase on glass shelf' },
+  { src: '/photo/gallery/9.webp', alt: 'Decor and artificial flower displays in store' },
+  { src: '/photo/gallery/10.webp', alt: 'White abstract sculpture' },
 ]
 
 const row1 = [...galleryImages, ...galleryImages, ...galleryImages]

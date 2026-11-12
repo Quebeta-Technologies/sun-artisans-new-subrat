@@ -5,16 +5,16 @@ const occasions = ['Housewarmings', 'Weddings', 'Festivals', 'Corporate gifting'
 
 // Needs 3+ images each: with only 2, the outgoing image would re-enter from the top
 const leftSlides = [
-  { src: '/photo/categories/dining-platters/1.png', alt: 'Floral ceramic vase gift' },
-  { src: '/photo/categories/god-items/6.png', alt: 'Brass Ganesha gift' },
-  { src: '/photo/categories/dining-platters/8.png', alt: 'Floral ceramic bowl gift' },
-  { src: '/photo/categories/other-items/1.png', alt: 'Brass Radha Krishna jhula gift' },
+  { src: '/photo/categories/dining-platters/1.webp', alt: 'Floral ceramic vase gift' },
+  { src: '/photo/categories/god-items/6.webp', alt: 'Brass Ganesha gift' },
+  { src: '/photo/categories/dining-platters/8.webp', alt: 'Floral ceramic bowl gift' },
+  { src: '/photo/categories/other-items/1.webp', alt: 'Brass Radha Krishna jhula gift' },
 ]
 const rightSlides = [
-  { src: '/photo/categories/other-items/8.png', alt: 'Metal vase gift' },
-  { src: '/photo/categories/clocks/11.png', alt: 'Classic table clock gift' },
-  { src: '/photo/categories/abstract-showpieces/4.png', alt: 'Brass tree of life gift' },
-  { src: '/photo/categories/dining-platters/5.png', alt: 'Gold ceramic vase gift' },
+  { src: '/photo/categories/other-items/8.webp', alt: 'Metal vase gift' },
+  { src: '/photo/categories/clocks/11.webp', alt: 'Classic table clock gift' },
+  { src: '/photo/categories/abstract-showpieces/4.webp', alt: 'Brass tree of life gift' },
+  { src: '/photo/categories/dining-platters/5.webp', alt: 'Gold ceramic vase gift' },
 ]
 
 // One image visible at a time; every few seconds the next one rises up from below and pushes the current one out the top
