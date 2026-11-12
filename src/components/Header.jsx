@@ -84,63 +84,50 @@ export default function Header() {
       </div>
 
       {/* Mobile slide-in drawer (right to left) */}
-      <div
-        className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${open ? 'visible' : 'invisible'}`}
-        aria-hidden={!open}
-      >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
-          onClick={() => setOpen(false)}
-        />
-        {/* Drawer panel */}
-        <nav
-          id="mobile-nav"
-          aria-label="Mobile"
-          className={`absolute right-0 top-0 h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] flex flex-col
-            ${open ? 'translate-x-0' : 'translate-x-full'}`}
-        >
-          {/* Drawer header */}
-          <div className="flex items-center justify-between border-b border-ink/10 px-5 py-4">
-            <img
-              src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png"
-              alt={store.legalName}
-              className="h-10 w-auto object-contain"
-            />
-            <button
-              onClick={() => setOpen(false)}
-              aria-label="Close menu"
-              className="rounded-md p-2 text-ink/60 hover:text-ink"
-            >
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M6 6l12 12M18 6 6 18" />
-              </svg>
-            </button>
-          </div>
-          {/* Nav links */}
-          <div className="flex-1 overflow-y-auto px-5 py-4">
-            {nav.map((n) => (
-              <a
-                key={n.href}
-                href={n.href}
-                onClick={() => setOpen(false)}
-                className="flex items-center border-b border-ink/10 py-4 text-base font-medium text-ink/80 hover:text-peacock-deep"
-              >
-                {n.label}
-                <svg viewBox="0 0 24 24" className="ml-auto h-4 w-4 text-brass" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 18l6-6-6-6" />
+      {open && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
+          {/* Drawer panel */}
+          <div
+            className="absolute right-0 top-0 bottom-0 w-72 bg-white shadow-2xl"
+            style={{ animation: 'slideInRight 0.3s ease forwards' }}
+          >
+            <style>{`@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }`}</style>
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+              <img src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png" alt={store.legalName} className="h-10 w-auto object-contain" />
+              <button onClick={() => setOpen(false)} aria-label="Close menu" className="rounded-md p-2 text-gray-500">
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M6 6l12 12M18 6 6 18" />
                 </svg>
+              </button>
+            </div>
+            {/* Nav links */}
+            <nav id="mobile-nav" aria-label="Mobile" className="px-5 py-2">
+              {nav.map((n) => (
+                <a
+                  key={n.href}
+                  href={n.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-between border-b border-gray-100 py-4 text-base font-medium text-gray-700 hover:text-peacock-deep"
+                >
+                  {n.label}
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 text-brass" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </a>
+              ))}
+            </nav>
+            {/* WhatsApp CTA */}
+            <div className="px-5 pt-4">
+              <a href={waLink()} target="_blank" rel="noopener" className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] py-3 font-semibold text-[#0B2A17] hover:bg-[#1EBE5D]">
+                <WhatsAppIcon className="h-5 w-5" /> WhatsApp us
               </a>
-            ))}
+            </div>
           </div>
-          {/* Bottom CTA */}
-          <div className="border-t border-ink/10 px-5 py-5">
-            <a href={waLink()} target="_blank" rel="noopener" className="btn w-full justify-center bg-[#25D366] text-[#0B2A17] hover:bg-[#1EBE5D]">
-              <WhatsAppIcon className="h-5 w-5" /> WhatsApp us
-            </a>
-          </div>
-        </nav>
-      </div>
+        </div>
+      )}
     </header>
   )
 }
