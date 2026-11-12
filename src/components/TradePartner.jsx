@@ -78,8 +78,9 @@ export default function TradePartner() {
       </div>
 
       {/* scallop bottom into light */}
-      <div className="absolute inset-x-0 bottom-0 leading-[0]">
-        <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="w-full" style={{ height: 40, display: 'block' }}>
+      {/* -bottom-px overlaps the next section so sub-pixel rounding can't leave a dark seam; min-width keeps waves gentle on mobile */}
+      <div className="absolute inset-x-0 -bottom-px h-7 overflow-hidden leading-[0] sm:h-10">
+        <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="h-full w-full min-w-[720px]" style={{ display: 'block' }}>
           <path d="M0,40 L0,20 Q60,40 120,20 Q180,0 240,20 Q300,40 360,20 Q420,0 480,20 Q540,40 600,20 Q660,0 720,20 Q780,40 840,20 Q900,0 960,20 Q1020,40 1080,20 Q1140,0 1200,20 Q1260,40 1320,20 Q1380,0 1440,20 L1440,40 Z" fill="#faf5ee" />
         </svg>
       </div>
