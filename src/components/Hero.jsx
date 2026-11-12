@@ -6,7 +6,6 @@ export default function Hero() {
       {/* Full-bleed video from the very top (the header floats over it); curved bottom corners */}
       <div className="relative h-svh min-h-130 w-full overflow-hidden rounded-b-2xl bg-peacock-deep shadow-xl shadow-black/15 sm:rounded-b-3xl">
         <video
-          src="/video/hero.mp4"
           poster="/video/hero-poster.jpg"
           preload="metadata"
           autoPlay
@@ -15,7 +14,11 @@ export default function Hero() {
           playsInline
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover"
-        />
+        >
+          {/* Full 1080p for larger screens, a lighter 720p for phones. Browsers that ignore `media` take the first (1080p) source. */}
+          <source src="/video/hero-1080.mp4" type="video/mp4" media="(min-width: 768px)" />
+          <source src="/video/hero-720.mp4" type="video/mp4" />
+        </video>
       </div>
     </section>
   )
