@@ -3,22 +3,9 @@ import { waLink } from '../data/content'
 import { Ornament, WhatsAppIcon } from './Icons'
 import Lightbox, { SmartImg } from './Lightbox'
 
-/*
- * Photos: put 6 images per item in public/photo/mandir/<id>/1.webp … 6.webp
- * e.g. public/photo/mandir/home-mandirs/1.webp
- * Ids: home-mandirs, god-murtis, brass-items
- * Size: 800 × 800 px (square). Until a file exists, the DEMO image below is shown instead.
- */
+// Photos live in public/photo/mandir/<id>/1.png … 6.png (square, ~800 × 800 px)
 const PHOTOS = 6
 const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.png`
-
-// Demo images (Unsplash) — shown only while the real photo file is missing. Delete once real photos are in.
-const u = (id) => `https://images.unsplash.com/photo-${id}?w=700&h=700&fit=crop&q=75`
-const DEMO = {
-  'god-murtis': ['1600618528240-fb9fc964b853', '1600585154340-be6161a56a0c', '1540518614846-7eded433c457', '1513519245088-0e12902e5a38', '1558618666-fcd25c85cd64', '1604014237800-1c9102c219da'].map(u),
-  'brass-items': ['1606293926075-69a00dbfde81', '1416879595882-3373a0480b5b', '1586023492125-27b2c045efd7', '1567767292278-a4f21aa2d36e', '1616046229478-9901c5536a45', '1540518614846-7eded433c457'].map(u),
-}
-const demoSrc = (id, n) => DEMO[id]?.[n - 1]
 
 const items = [
   {
@@ -114,7 +101,6 @@ function PhotoCarousel({ item, dir, onOpen }) {
               >
                 <SmartImg
                   src={photoSrc(item.id, n + 1)}
-                  fallbackSrc={demoSrc(item.id, n + 1)}
                   alt=""
                   tone="dark"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -263,7 +249,6 @@ export default function MandirCollection() {
         title={active.name}
         total={PHOTOS}
         srcFor={(n) => photoSrc(active.id, n)}
-        fallbackFor={(n) => demoSrc(active.id, n)}
         enquire={enquire(active)}
         index={viewing}
         onClose={() => setViewing(null)}
