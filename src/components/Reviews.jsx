@@ -74,16 +74,16 @@ export default function Reviews() {
         </div>
 
         {/* Track */}
-        <div className="overflow-hidden">
+        <div className="overflow-hidden [--per:1] sm:[--per:2] lg:[--per:3]">
           <div
             className="flex"
             style={{
-              transform: `translateX(calc(-${index} * (100% / 3)))`,
+              transform: `translateX(calc(-${index} * (100% / var(--per))))`,
               transition: transitioning ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
             }}
           >
             {track.map((r, i) => (
-              <div key={i} className="flex-shrink-0 px-2" style={{ width: 'calc(100% / 3)' }}>
+              <div key={i} className="flex-shrink-0 px-2" style={{ width: 'calc(100% / var(--per))' }}>
                 <div className="flex flex-col rounded-2xl p-6 h-full"
                   style={{ background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
                   <p className="text-base mb-3" style={{ color: '#C9973A' }}>{'★'.repeat(r.rating)}</p>
