@@ -92,17 +92,12 @@
     pointer-events: none;
     background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
     transform: translateX(-100%);
-    animation: btn-shine 4s ease-in-out infinite;
   }
   &:hover::after { animation: btn-shine-once 0.8s ease-out; }
 
   @media (prefers-reduced-motion: reduce) {
     &::after { animation: none; }
   }
-}
-@keyframes btn-shine {
-  0% { transform: translateX(-100%); }
-  25%, 100% { transform: translateX(100%); }
 }
 @keyframes btn-shine-once {
   from { transform: translateX(-100%); }
