@@ -17,6 +17,7 @@ export default function EnquiryForm({ fields, intro, submitLabel, dark = false }
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          website: e.target.elements.website?.value || '',
           subject: intro,
           fields: fields.map((f) => ({ label: f.label, value: values[f.name] || '' })),
         }),
@@ -65,6 +66,8 @@ export default function EnquiryForm({ fields, intro, submitLabel, dark = false }
 
   return (
     <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
+      {/* Honeypot: hidden from people, but spam bots fill it in and get silently dropped by the API */}
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
       {fields.map((f) => (
         <label key={f.name} className={`block ${f.wide ? 'sm:col-span-2' : ''}`}>
           <span className={`mb-1.5 block text-sm font-medium ${dark ? 'text-chandan/80' : 'text-ink-soft'}`}>
