@@ -77,11 +77,12 @@ export default function Header({ solid: forceSolid = false }) {
             className="rounded-md p-2 lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            onClick={() => setOpen((o) => !o)}
+            aria-label="Open menu"
+            onClick={() => setOpen(true)}
           >
+            {/* Always the hamburger: the drawer has its own close button, so an X here would show twice */}
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-              {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+              <path d="M4 7h16M4 12h16M4 17h16" />
             </svg>
           </button>
         </div>
