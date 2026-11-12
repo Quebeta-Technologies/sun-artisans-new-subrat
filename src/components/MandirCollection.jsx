@@ -156,7 +156,7 @@ export default function MandirCollection() {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brass-light">Mandir Collection</p>
-          <h2 id="mandir-heading" className="mt-2 text-4xl sm:text-5xl">
+          <h2 id="mandir-heading" className="mt-2 whitespace-nowrap text-[clamp(1.5rem,8vw,2.25rem)] sm:text-5xl">
             Mandir, Murti &amp; Brass
           </h2>
           <p className="mt-2 font-display text-xl text-brass-light sm:text-2xl">Crafted for everyday worship</p>
