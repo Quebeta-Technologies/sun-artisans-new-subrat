@@ -59,7 +59,7 @@ export default function Reviews() {
               <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C9973A]">Reviews</span>
               <span className="h-px w-8 bg-[#C9973A]" />
             </div>
-            <h2 className="font-display text-4xl sm:text-5xl leading-tight" style={{ color: '#f5ede0' }}>
+            <h2 className="font-display whitespace-nowrap text-[clamp(1.5rem,7.5vw,2.25rem)] leading-tight sm:text-5xl" style={{ color: '#f5ede0' }}>
               What our customers say
             </h2>
           </div>
