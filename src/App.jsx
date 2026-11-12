@@ -44,7 +44,10 @@ export default function App() {
         aria-label="Chat with Sun Artisans on WhatsApp"
         className="fixed right-5 bottom-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/25 transition-colors hover:bg-[#1ebe5d]"
       >
-        <WhatsAppIcon className="h-7 w-7" />
+        <span aria-hidden="true" className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-[wa-glow_2s_ease-out_infinite]" />
+        <span aria-hidden="true" className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-[wa-glow_2s_ease-out_1s_infinite]" />
+        <WhatsAppIcon className="relative h-7 w-7" />
+        <style>{`@keyframes wa-glow { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.9); opacity: 0; } }`}</style>
       </a>
     </>
   )
