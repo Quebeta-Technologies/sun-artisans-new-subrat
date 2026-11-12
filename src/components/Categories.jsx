@@ -11,46 +11,60 @@ const enquiry = (cat) => ({
   external: !cat.link,
 })
 
-/* ── Mobile: all categories stacked, each with name + photo grid ── */
+/* ── Mobile: accordion — tap category name to open/close ── */
 function MobileCategories({ onView }) {
+  const [openId, setOpenId] = useState(null)
   return (
-    <div className="space-y-10 lg:hidden">
+    <div className="divide-y divide-brass/20 rounded-2xl border border-brass/20 lg:hidden">
       {categories.map((cat) => {
         const { href, external } = enquiry(cat)
+        const isOpen = openId === cat.id
         return (
           <div key={cat.id}>
-            {/* Category name header */}
-            <div className="mb-3 flex items-center gap-3">
-              <span className="h-px flex-1 bg-brass/30" />
-              <h3 className="font-display text-xl text-peacock-deep">{cat.name}</h3>
-              <span className="h-px flex-1 bg-brass/30" />
-            </div>
-            {/* Photo grid */}
-            <ul className="grid grid-cols-3 gap-2">
-              {Array.from({ length: PHOTOS_PER_CATEGORY }, (_, i) => (
-                <li key={i}>
-                  <button
-                    type="button"
-                    onClick={() => onView(cat, i)}
-                    aria-label={`View ${cat.name} photo ${i + 1}`}
-                    className="group relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-[#DCC8A6] ring-1 ring-ink/10"
-                  >
-                    <SmartImg
-                      src={photoSrc(cat.id, i + 1)}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
-            {/* Enquire button */}
-            <div className="mt-4 text-center">
-              <a href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})} className="btn-primary">
-                {external && <WhatsAppIcon className="h-5 w-5" />}
-                Enquire about {cat.name}
-              </a>
-            </div>
+            {/* Accordion header */}
+            <button
+              type="button"
+              onClick={() => setOpenId(isOpen ? null : cat.id)}
+              className="flex w-full items-center justify-between px-4 py-4 text-left"
+            >
+              <span className="font-display text-lg text-peacock-deep">{cat.name}</span>
+              <svg
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                className={`h-5 w-5 shrink-0 text-brass transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+
+            {/* Collapsible content */}
+            {isOpen && (
+              <div className="px-4 pb-5">
+                <ul className="grid grid-cols-3 gap-2">
+                  {Array.from({ length: PHOTOS_PER_CATEGORY }, (_, i) => (
+                    <li key={i}>
+                      <button
+                        type="button"
+                        onClick={() => onView(cat, i)}
+                        aria-label={`View ${cat.name} photo ${i + 1}`}
+                        className="group relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-[#DCC8A6] ring-1 ring-ink/10"
+                      >
+                        <SmartImg
+                          src={photoSrc(cat.id, i + 1)}
+                          alt=""
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 text-center">
+                  <a href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})} className="btn-primary">
+                    {external && <WhatsAppIcon className="h-5 w-5" />}
+                    Enquire about {cat.name}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )
       })}
