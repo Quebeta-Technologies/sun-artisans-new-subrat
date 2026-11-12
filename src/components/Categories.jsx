@@ -10,7 +10,7 @@ import Lightbox, { SmartImg } from './Lightbox'
  * Recommended size: 800 × 800 px (square). Missing files show a brass lattice placeholder.
  */
 const PHOTOS_PER_CATEGORY = 12
-const photoSrc = (catId, n) => `/photo/categories/${catId}/${n}.webp`
+const photoSrc = (catId, n) => `/photo/categories/${catId}/${n}.png`
 
 
 const enquiry = (cat) => ({
