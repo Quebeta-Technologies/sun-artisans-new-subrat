@@ -197,13 +197,13 @@ export default function MandirCollection() {
                 aria-controls="mandir-panel"
                 tabIndex={selected ? 0 : -1}
                 onClick={() => select(i)}
-                className={`group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-4 text-center transition-all duration-300 sm:flex-row sm:gap-3 sm:px-5 sm:text-left
+                className={`group flex cursor-pointer flex-row items-center justify-center gap-2 rounded-2xl border px-2 py-3 text-left transition-all duration-300 sm:gap-3 sm:px-5 sm:py-4
                   ${selected
                     ? 'border-brass-light bg-brass-light text-peacock-deep shadow-lg shadow-black/30'
                     : 'border-brass-light/25 bg-peacock/40 text-chandan hover:border-brass-light/60 hover:bg-peacock/70'}`}
               >
-                <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors ${selected ? 'bg-peacock-deep text-brass-light' : 'bg-brass-light/10 text-brass-light'}`}>
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full sm:h-11 sm:w-11 transition-colors ${selected ? 'bg-peacock-deep text-brass-light' : 'bg-brass-light/10 text-brass-light'}`}>
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     {it.icon}
                   </svg>
                 </span>
