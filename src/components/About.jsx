@@ -185,9 +185,9 @@ export default function About() {
           </div>
 
           {/* Pillars */}
-          <ul className="mt-10 grid gap-4 text-left sm:grid-cols-3">
+          <ul className="mt-10 grid grid-cols-3 gap-2 text-left">
             {pillars.map((p) => (
-              <li key={p.title} className="flex items-center justify-center gap-2.5 rounded-xl border border-brass-light/20 bg-peacock-deep/50 px-4 py-4">
+              <li key={p.title} className="flex flex-col items-center justify-center gap-2 rounded-xl border border-brass-light/20 bg-peacock-deep/50 px-2 py-4">
                 <svg
                   aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -195,7 +195,7 @@ export default function About() {
                 >
                   {p.icon}
                 </svg>
-                <h3 className="text-lg text-chandan">{p.title}</h3>
+                <h3 className="text-center text-sm font-medium text-chandan sm:text-base">{p.title}</h3>
               </li>
             ))}
           </ul>
