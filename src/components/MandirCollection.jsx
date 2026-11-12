@@ -10,7 +10,7 @@ import Lightbox, { SmartImg } from './Lightbox'
  * Size: 800 × 800 px (square). Until a file exists, the DEMO image below is shown instead.
  */
 const PHOTOS = 6
-const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.webp`
+const photoSrc = (id, n) => `/photo/mandir/${id}/${n}.png`
 
 // Demo images (Unsplash) — shown only while the real photo file is missing. Delete once real photos are in.
 const u = (id) => `https://images.unsplash.com/photo-${id}?w=700&h=700&fit=crop&q=75`
