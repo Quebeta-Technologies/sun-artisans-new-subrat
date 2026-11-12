@@ -41,7 +41,7 @@ export default function Footer() {
             <svg viewBox="0 0 24 24" className="h-4 w-4 text-red-500" fill="currentColor" aria-label="love" role="img">
               <path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.1 5.2 3 1.6-1.9 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21Z" />
             </svg>
-            by <span className="font-semibold tracking-wider text-brass-light">QUEBETA</span>
+            by <a href="https://quebeta.in" target="_blank" rel="noopener" className="font-semibold tracking-wider text-brass-light hover:underline">QUEBETA</a>
           </p>
         </div>
       </div>
