@@ -90,8 +90,8 @@ export default function Header() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
           {/* Drawer panel */}
           <div
-            className="absolute right-0 top-0 bottom-0 w-72 bg-white shadow-2xl"
-            style={{ animation: 'slideInRight 0.3s ease forwards' }}
+            className="absolute right-0 top-0 bottom-0 w-72 shadow-2xl"
+            style={{ backgroundColor: '#ffffff', animation: 'slideInRight 0.3s ease forwards' }}
           >
             <style>{`@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }`}</style>
             {/* Header */}
