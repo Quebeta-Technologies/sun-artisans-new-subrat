@@ -31,6 +31,7 @@ export default function Header() {
   const solid = p > 0.55 // switch text/logo to dark once the background is mostly white
 
   return (
+    <>
     <header
       className={`fixed inset-x-0 top-0 z-40 ${solid ? 'text-ink' : 'text-white'}`}
       style={{
@@ -82,18 +83,17 @@ export default function Header() {
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Mobile slide-in drawer (right to left) */}
+      {/* Rendered outside <header>: its backdrop-filter would otherwise clip this fixed overlay to the header's height */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          {/* Drawer panel */}
           <div
-            className="absolute right-0 top-0 bottom-0 w-72 shadow-2xl"
-            style={{ backgroundColor: '#ffffff', animation: 'slideInRight 0.3s ease forwards' }}
+            className="absolute left-0 top-0 bottom-0 w-72 max-w-[85vw] overflow-y-auto shadow-2xl"
+            style={{ backgroundColor: '#ffffff', animation: 'slideInLeft 0.3s ease forwards' }}
           >
-            <style>{`@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }`}</style>
+            <style>{`@keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }`}</style>
             {/* Header */}
             <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
               <img src="/photo/SUN Artisans LLP - Logo Design - FINAL - 18-3-26    1.png" alt={store.legalName} className="h-10 w-auto object-contain" />
@@ -128,7 +128,7 @@ export default function Header() {
           </div>
         </div>
       )}
-    </header>
+    </>
   )
 }
 
